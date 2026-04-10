@@ -46,9 +46,11 @@ export default function PremiumLandingPage() {
     <div className="pb-16 bg-[#ffffff] overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full bg-[#d6eaff] overflow-hidden">
-        <div className="max-w-[1280px] mx-auto px-6 relative flex flex-col md:flex-row justify-between pt-6">
-           <div className="w-full md:w-[50%] lg:w-[55%] space-y-4 z-10 pt-4 pb-8 self-center">
+      <section className="relative w-full bg-[#d6eaff] overflow-hidden lg:h-[280px]">
+        <div className="max-w-[1280px] h-full mx-auto px-6 relative flex flex-col md:flex-row justify-between pt-6 lg:pt-0 pb-8 lg:pb-0">
+           
+           {/* Left Content */}
+           <div className="w-full md:w-[50%] lg:w-[45%] space-y-4 z-10 self-center">
               <h1 className="text-[28px] font-bold text-white mb-2 leading-tight drop-shadow-md">
                  Looking for a test ?
               </h1>
@@ -85,23 +87,23 @@ export default function PremiumLandingPage() {
               </div>
            </div>
 
-           {/* Right side Graphics - recreating the '4x VALUE' box */}
-           <div className="hidden lg:flex w-[45%] justify-end items-end gap-5 h-[280px] self-end pt-6">
-              {/* Doctor / Brand Ambassador image placeholder */}
-              <div className="relative w-52 h-[260px] flex-shrink-0 bottom-0 mt-auto">
-                 <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-t-[30px] drop-shadow-xl z-10" />
-                 
-                 {/* Shield overlay - Attached relative to doctor */}
-                 <div className="absolute -right-4 -bottom-2 z-30 w-[116px] h-32 bg-gradient-to-b from-[#1a365d] to-[#0f213e] rounded-b-[30px] rounded-[16px] shadow-2xl border-[2px] border-white flex flex-col items-center justify-center p-2 transform scale-95">
-                    <h2 className="text-white text-3xl font-black italic shadow-black/50 drop-shadow-md">4x</h2>
-                    <p className="text-white font-bold text-center leading-tight tracking-wider mt-1 text-[11px]">VALUE</p>
-                    <p className="text-blue-200 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
-                 </div>
+           {/* Center Doctor Image (Absolute Positioned for perfect center) */}
+           <div className="hidden lg:block absolute left-[60%] bottom-0 -translate-x-1/2 w-52 h-[260px] z-20">
+              <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-t-[40px] drop-shadow-xl" />
+              
+              {/* Shield overlay - Adjusted to sit on left like inspiration reference */}
+              <div className="absolute -left-12 bottom-6 z-30 w-[110px] h-28 rounded-b-[40px] rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2px] border-white flex flex-col items-center justify-center p-2 transform scale-[1.05] relative overflow-hidden bg-[#1a365d]">
+                 <div className="absolute inset-0 bg-gradient-to-b from-[#1a365d] to-[#0f213e]" />
+                 <h2 className="relative z-10 text-white text-[32px] font-black italic drop-shadow-md leading-none mb-1">4x</h2>
+                 <p className="relative z-10 text-white font-bold text-center leading-[1.1] tracking-wider text-[10px]">VALUE</p>
+                 <p className="relative z-10 text-white/70 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
               </div>
+           </div>
 
-              {/* Benefits list on the right */}
-              <div className="flex flex-col space-y-2 z-10 text-blue-950 font-bold w-[210px] pb-6 flex-shrink-0">
-                 <div className="text-[16px] leading-tight mb-2">
+           {/* Right Benefits List */}
+           <div className="hidden lg:flex w-[30%] justify-end items-center z-10">
+              <div className="flex flex-col space-y-2 z-10 text-blue-950 font-bold w-[210px] flex-shrink-0">
+                 <div className="text-[16px] leading-[1.1] mb-2 font-extrabold text-[#1a365d]">
                     Delivering <span className="text-[#3b82f6] italic">Complete Care</span> <br/>for Better Health
                  </div>
                  {[
@@ -110,12 +112,12 @@ export default function PremiumLandingPage() {
                    { icon: Stethoscope, text: 'REPORT CONSULTATION' },
                    { icon: Apple, text: 'DIET PLAN' }
                  ].map((b, i) => (
-                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#f4f8fc] px-3 py-2 rounded-full border border-blue-50 text-[#1a365d] shadow-sm">
-                       <b.icon size={14} className="text-[#3b82f6]" />
+                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#ffffff] px-2.5 py-1.5 rounded-full shadow-sm text-[#1a365d]">
+                       <b.icon size={13} className="text-[#3b82f6]" />
                        {b.text}
                     </div>
                  ))}
-                 <button className="bg-[#e60000] shadow-md text-white px-5 py-2 rounded-full uppercase font-black text-[12px] self-start mt-2 hover:bg-red-700 transition-colors">
+                 <button className="bg-[#e60000] shadow-[0_4px_14px_0_rgb(230,0,0,0.39)] text-white px-5 py-2.5 rounded-full uppercase font-black text-[12px] self-start mt-2 hover:bg-red-700 transition-colors">
                     BOOK NOW
                  </button>
               </div>
