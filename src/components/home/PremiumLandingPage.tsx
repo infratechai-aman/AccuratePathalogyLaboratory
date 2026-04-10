@@ -46,62 +46,62 @@ export default function PremiumLandingPage() {
     <div className="pb-16 bg-[#ffffff] overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full bg-[#d6eaff] pb-10">
-        <div className="max-w-[1280px] mx-auto px-6 relative flex flex-col md:flex-row items-center justify-between pt-8">
-           <div className="w-full md:w-[50%] lg:w-[55%] space-y-6 z-10">
-              <h1 className="text-[34px] font-bold text-white mb-2 leading-tight drop-shadow-md">
+      <section className="relative w-full bg-[#d6eaff] overflow-hidden">
+        <div className="max-w-[1280px] mx-auto px-6 relative flex flex-col md:flex-row justify-between pt-6">
+           <div className="w-full md:w-[50%] lg:w-[55%] space-y-4 z-10 pt-4 pb-8 self-center">
+              <h1 className="text-[28px] font-bold text-white mb-2 leading-tight drop-shadow-md">
                  Looking for a test ?
               </h1>
               
               {/* Search Bar matching reference */}
-              <div className="relative bg-white rounded-full flex items-center p-2 pr-4 shadow-sm w-full max-w-xl">
-                 <div className="pl-3 pr-2"><Search size={20} className="text-gray-400" /></div>
+              <div className="relative bg-white rounded-full flex items-center p-1.5 pr-4 shadow-sm w-full max-w-xl">
+                 <div className="pl-4 pr-3"><Search size={18} className="text-gray-400" /></div>
                  <input 
                     type="text" 
                     placeholder="Search Tests" 
-                    className="flex-1 py-3 text-[15px] outline-none text-gray-700 bg-transparent font-medium"
+                    className="flex-1 py-2.5 text-[15px] outline-none text-gray-700 bg-transparent font-medium"
                  />
-                 <div className="flex items-center gap-3 border-l border-gray-200 pl-3">
-                    <Mic size={20} className="text-red-500 cursor-pointer" />
-                    <Upload size={20} className="text-blue-900 cursor-pointer" />
+                 <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
+                    <Mic size={18} className="text-red-500 cursor-pointer hover:text-red-600" />
+                    <Upload size={18} className="text-blue-900 cursor-pointer hover:text-blue-700" />
                  </div>
               </div>
 
               {/* Quick Action Pills */}
-              <div className="flex gap-4 pt-4">
-                 <button className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-sm border border-white hover:border-blue-200 transition-colors w-48 relative">
-                    <div className="bg-blue-50 p-2 rounded-lg text-blue-900">
+              <div className="flex gap-4 pt-3">
+                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-white hover:border-blue-200 transition-colors w-44 relative">
+                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900">
                        <ScanFaceIcon />
                     </div>
-                    <span className="font-bold text-[15px] text-gray-800">Face Scan</span>
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">New</span>
+                    <span className="font-bold text-[14px] text-gray-800">Face Scan</span>
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">New</span>
                  </button>
-                 <button className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-sm border border-white hover:border-blue-200 transition-colors">
-                    <div className="bg-blue-50 p-2 rounded-lg text-blue-900">
-                       <TestTube size={20} />
+                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-white hover:border-blue-200 transition-colors">
+                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900">
+                       <TestTube size={18} />
                     </div>
-                    <span className="font-bold text-[15px] text-gray-800">Create Your Own Package</span>
+                    <span className="font-bold text-[14px] text-gray-800">Create Your Own Package</span>
                  </button>
               </div>
            </div>
 
            {/* Right side Graphics - recreating the '4x VALUE' box */}
-           <div className="hidden lg:flex w-[45%] justify-end items-end gap-6 h-[380px]">
+           <div className="hidden lg:flex w-[45%] justify-end items-end gap-5 h-[280px] self-end pt-6">
               {/* Doctor / Brand Ambassador image placeholder */}
-              <div className="relative w-60 h-80 flex-shrink-0 bottom-0">
-                 <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-top rounded-t-[50px] drop-shadow-xl z-10" />
+              <div className="relative w-52 h-[260px] flex-shrink-0 bottom-0 mt-auto">
+                 <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-t-[30px] drop-shadow-xl z-10" />
                  
                  {/* Shield overlay - Attached relative to doctor */}
-                 <div className="absolute -right-6 -bottom-4 z-30 w-32 h-40 bg-gradient-to-b from-[#1a365d] to-[#0f213e] rounded-b-[40px] rounded-[16px] shadow-2xl border-[3px] border-white flex flex-col items-center justify-center p-3">
-                    <h2 className="text-white text-4xl font-black italic shadow-black/50 drop-shadow-md">4x</h2>
-                    <p className="text-white font-bold text-center leading-tight tracking-wider mt-1 text-[12px]">VALUE</p>
-                    <p className="text-blue-200 text-[6px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
+                 <div className="absolute -right-4 -bottom-2 z-30 w-[116px] h-32 bg-gradient-to-b from-[#1a365d] to-[#0f213e] rounded-b-[30px] rounded-[16px] shadow-2xl border-[2px] border-white flex flex-col items-center justify-center p-2 transform scale-95">
+                    <h2 className="text-white text-3xl font-black italic shadow-black/50 drop-shadow-md">4x</h2>
+                    <p className="text-white font-bold text-center leading-tight tracking-wider mt-1 text-[11px]">VALUE</p>
+                    <p className="text-blue-200 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
                  </div>
               </div>
 
               {/* Benefits list on the right */}
-              <div className="flex flex-col space-y-3 z-10 text-blue-950 font-bold w-[230px] pb-8 flex-shrink-0">
-                 <div className="text-[18px] leading-tight mb-3">
+              <div className="flex flex-col space-y-2 z-10 text-blue-950 font-bold w-[210px] pb-6 flex-shrink-0">
+                 <div className="text-[16px] leading-tight mb-2">
                     Delivering <span className="text-[#3b82f6] italic">Complete Care</span> <br/>for Better Health
                  </div>
                  {[
@@ -110,12 +110,12 @@ export default function PremiumLandingPage() {
                    { icon: Stethoscope, text: 'REPORT CONSULTATION' },
                    { icon: Apple, text: 'DIET PLAN' }
                  ].map((b, i) => (
-                    <div key={i} className="flex items-center gap-3 text-[11px] uppercase tracking-wider bg-[#f4f8fc] px-4 py-2.5 rounded-full border border-blue-50 text-[#1a365d] shadow-sm">
-                       <b.icon size={16} className="text-[#3b82f6]" />
+                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#f4f8fc] px-3 py-2 rounded-full border border-blue-50 text-[#1a365d] shadow-sm">
+                       <b.icon size={14} className="text-[#3b82f6]" />
                        {b.text}
                     </div>
                  ))}
-                 <button className="bg-[#e60000] shadow-md text-white px-6 py-2.5 rounded-full uppercase font-black text-[13px] self-start mt-3 hover:bg-red-700 transition-colors">
+                 <button className="bg-[#e60000] shadow-md text-white px-5 py-2 rounded-full uppercase font-black text-[12px] self-start mt-2 hover:bg-red-700 transition-colors">
                     BOOK NOW
                  </button>
               </div>
@@ -180,59 +180,57 @@ export default function PremiumLandingPage() {
             {/* Male Card Section */}
             <div className="flex flex-col">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-[22px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />men</h3>
+                   <h3 className="text-[20px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />men</h3>
                    <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#f5ecff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop" fill alt="Under 30 yrs Male" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_male_under30.png" fill alt="Under 30 yrs Male" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">Under 30 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">Under 30 yrs</span>
                    </div>
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#eef7fc] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&h=300&fit=crop" fill alt="30 - 45 yrs Male" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_male_30to45.png" fill alt="30 - 45 yrs Male" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">30 - 45 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">30 - 45 yrs</span>
                    </div>
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#fcefee] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop" fill alt="45 - 60 yrs Male" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_male_45to60.png" fill alt="45 - 60 yrs Male" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">45 - 60 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">45 - 60 yrs</span>
                    </div>
                 </div>
-                <div className="w-10 h-[3px] bg-gray-200 mx-auto mt-6 rounded-full overflow-hidden flex"><div className="w-1/2 h-full bg-[#0A2540]"></div></div>
             </div>
             
             {/* Female Card Section */}
             <div className="flex flex-col mt-6 md:mt-0">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-[22px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />women</h3>
+                   <h3 className="text-[20px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />women</h3>
                    <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#faedff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=300&fit=crop" fill alt="Under 30 yrs Female" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_female_under30.png" fill alt="Under 30 yrs Female" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">Under 30 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">Under 30 yrs</span>
                    </div>
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#eefaff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop" fill alt="30 - 45 yrs Female" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_female_30to45.png" fill alt="30 - 45 yrs Female" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">30 - 45 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">30 - 45 yrs</span>
                    </div>
-                   <div className="flex-1 flex flex-col items-center">
-                      <div className="w-full aspect-[4/5] bg-[#fff0ea] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
-                         <Image src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop" fill alt="45 - 60 yrs Female" className="object-cover" />
+                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                      <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
+                         <Image src="/images/portrait_female_45to60.png" fill alt="45 - 60 yrs Female" className="object-cover" />
                       </div>
-                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">45 - 60 yrs</span>
+                      <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">45 - 60 yrs</span>
                    </div>
                 </div>
-                <div className="w-10 h-[3px] bg-gray-200 mx-auto mt-6 rounded-full overflow-hidden flex"><div className="w-1/2 h-full bg-[#0A2540]"></div></div>
             </div>
          </div>
       </section>
