@@ -88,7 +88,7 @@ export default function PremiumLandingPage() {
            </div>
 
            {/* Center Doctor Image (Floating & Vertically Centered) */}
-           <div className="hidden lg:block absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[280px] z-10 rounded-[30px] shadow-[0_12px_30px_rgb(0,0,0,0.15)]">
+           <div className="hidden lg:block absolute left-[60%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[280px] z-10 rounded-[30px] shadow-[0_12px_30px_rgb(0,0,0,0.15)]">
               <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-[30px]" />
               
               {/* Shield overlay - Floating on left */}
