@@ -94,7 +94,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-xl font-bold text-[#11243E] mb-4">Contact Us</h2>
               <p className="mb-4">
-                You can contact us for any queries regarding our terms of service or privacy policy to resolve your questions. You can also submit your request or query regarding our terms of services or privacy policy at: <strong>info@accuratepathlabs.in</strong>
+                You can contact us for any queries regarding our terms of service or privacy policy to resolve your questions. You can also submit your request or query regarding our terms of services or privacy policy at: <strong>info@accuratepathlabs.in</strong> or call us at <strong>884 065 8081</strong>.
               </p>
             </section>
           </div>
