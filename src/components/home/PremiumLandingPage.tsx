@@ -46,12 +46,12 @@ export default function PremiumLandingPage() {
     <div className="pb-16 bg-[#ffffff] overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full bg-[#d6eaff] overflow-hidden lg:h-[280px]">
-        <div className="max-w-[1280px] h-full mx-auto px-6 relative flex flex-col md:flex-row justify-between pt-6 lg:pt-0 pb-8 lg:pb-0">
+      <section className="relative w-full bg-[#d6eaff] overflow-hidden lg:h-[320px]">
+        <div className="max-w-[1280px] h-full mx-auto px-6 relative flex flex-col lg:flex-row justify-between pt-6 lg:pt-0 pb-10 lg:pb-0 lg:items-center">
            
            {/* Left Content */}
-           <div className="w-full md:w-[50%] lg:w-[45%] space-y-4 z-10 self-center">
-              <h1 className="text-[28px] font-bold text-white mb-2 leading-tight drop-shadow-md">
+           <div className="w-full lg:w-[38%] space-y-5 z-20">
+              <h1 className="text-[30px] font-bold text-white mb-2 leading-tight drop-shadow-md">
                  Looking for a test ?
               </h1>
               
@@ -70,16 +70,16 @@ export default function PremiumLandingPage() {
               </div>
 
               {/* Quick Action Pills */}
-              <div className="flex gap-4 pt-3">
-                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-white hover:border-blue-200 transition-colors w-44 relative">
-                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900">
+              <div className="flex gap-4 pt-2">
+                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-[0_4px_10px_rgb(0,0,0,0.03)] border border-white hover:border-blue-200 transition-colors w-44 relative group">
+                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900 group-hover:bg-blue-100 transition-colors">
                        <ScanFaceIcon />
                     </div>
                     <span className="font-bold text-[14px] text-gray-800">Face Scan</span>
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">New</span>
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">New</span>
                  </button>
-                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-white hover:border-blue-200 transition-colors">
-                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900">
+                 <button className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl shadow-[0_4px_10px_rgb(0,0,0,0.03)] border border-white hover:border-blue-200 transition-colors group">
+                    <div className="bg-blue-50 p-1.5 rounded-lg text-blue-900 group-hover:bg-blue-100 transition-colors">
                        <TestTube size={18} />
                     </div>
                     <span className="font-bold text-[14px] text-gray-800">Create Your Own Package</span>
@@ -88,23 +88,25 @@ export default function PremiumLandingPage() {
            </div>
 
            {/* Center Doctor Image (Absolute Positioned for perfect center) */}
-           <div className="hidden lg:block absolute left-[60%] bottom-0 -translate-x-1/2 w-52 h-[260px] z-20">
+           <div className="hidden lg:block absolute left-1/2 bottom-0 -translate-x-1/2 w-[240px] h-[300px] z-10">
               <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-t-[40px] drop-shadow-xl" />
               
-              {/* Shield overlay - Adjusted to sit on left like inspiration reference */}
-              <div className="absolute -left-12 bottom-6 z-30 w-[110px] h-28 rounded-b-[40px] rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2px] border-white flex flex-col items-center justify-center p-2 transform scale-[1.05] relative overflow-hidden bg-[#1a365d]">
-                 <div className="absolute inset-0 bg-gradient-to-b from-[#1a365d] to-[#0f213e]" />
-                 <h2 className="relative z-10 text-white text-[32px] font-black italic drop-shadow-md leading-none mb-1">4x</h2>
-                 <p className="relative z-10 text-white font-bold text-center leading-[1.1] tracking-wider text-[10px]">VALUE</p>
-                 <p className="relative z-10 text-white/70 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
+              {/* Shield overlay - Fixed duplicate relative/absolute bug */}
+              <div className="absolute -left-12 bottom-6 z-30 transform scale-105">
+                 <div className="w-[110px] h-28 rounded-b-[40px] rounded-t-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2.5px] border-white flex flex-col items-center justify-center p-2 relative overflow-hidden bg-[#1a365d]">
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#1a365d] to-[#0f213e]" />
+                    <h2 className="relative z-10 text-white text-[32px] font-black italic drop-shadow-md leading-none mb-1">4x</h2>
+                    <p className="relative z-10 text-white font-bold text-center leading-[1.1] tracking-wider text-[10px]">VALUE</p>
+                    <p className="relative z-10 text-blue-200 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
+                 </div>
               </div>
            </div>
 
            {/* Right Benefits List */}
-           <div className="hidden lg:flex w-[30%] justify-end items-center z-10">
-              <div className="flex flex-col space-y-2 z-10 text-blue-950 font-bold w-[210px] flex-shrink-0">
-                 <div className="text-[16px] leading-[1.1] mb-2 font-extrabold text-[#1a365d]">
-                    Delivering <span className="text-[#3b82f6] italic">Complete Care</span> <br/>for Better Health
+           <div className="hidden lg:flex w-[35%] lg:w-[32%] justify-end items-center z-20">
+              <div className="flex flex-col space-y-2.5 z-10 text-blue-950 font-bold w-[220px] flex-shrink-0">
+                 <div className="text-[17px] leading-[1.2] mb-1 font-extrabold text-[#1a365d]">
+                    Delivering <span className="text-[#3b82f6] italic font-black">Complete Care</span> <br/>for Better Health
                  </div>
                  {[
                    { icon: FileText, text: 'SMART REPORTS' },
@@ -112,12 +114,12 @@ export default function PremiumLandingPage() {
                    { icon: Stethoscope, text: 'REPORT CONSULTATION' },
                    { icon: Apple, text: 'DIET PLAN' }
                  ].map((b, i) => (
-                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#ffffff] px-2.5 py-1.5 rounded-full shadow-sm text-[#1a365d]">
-                       <b.icon size={13} className="text-[#3b82f6]" />
+                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#ffffff] px-3 py-2 rounded-full shadow-[0_2px_8px_rgb(0,0,0,0.04)] text-[#1a365d] border border-blue-50 hover:bg-blue-50 transition-colors cursor-default">
+                       <b.icon size={14} className="text-[#3b82f6]" />
                        {b.text}
                     </div>
                  ))}
-                 <button className="bg-[#e60000] shadow-[0_4px_14px_0_rgb(230,0,0,0.39)] text-white px-5 py-2.5 rounded-full uppercase font-black text-[12px] self-start mt-2 hover:bg-red-700 transition-colors">
+                 <button className="bg-[#e60000] shadow-[0_4px_14px_0_rgb(230,0,0,0.39)] text-white px-6 py-2.5 rounded-full uppercase font-black text-[13px] self-start mt-3 hover:bg-red-700 hover:shadow-[0_6px_20px_0_rgb(230,0,0,0.45)] transition-all transform hover:-translate-y-0.5">
                     BOOK NOW
                  </button>
               </div>
