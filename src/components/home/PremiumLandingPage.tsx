@@ -176,52 +176,63 @@ export default function PremiumLandingPage() {
 
       {/* 3. HEALTH CHECKUPS BY AGE & GENDER */}
       <section className="max-w-[1280px] mx-auto px-6 pt-16">
-         <h2 className="text-[26px] font-bold text-blue-950 tracking-tight mb-8">
-            Health Checkups By Age & Gender
-         </h2>
-         <div className="grid md:grid-cols-2 gap-6">
-            {/* Male Card */}
-            <div className="bg-[#f4f8fe] rounded-3xl p-6 border border-blue-50 relative overflow-hidden">
+         <div className="grid md:grid-cols-2 gap-8">
+            {/* Male Card Section */}
+            <div className="flex flex-col">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-[22px] font-black text-blue-950">Male</h3>
-                   <span className="text-blue-600 text-sm font-bold flex items-center">View All <ChevronRight size={16}/></span>
+                   <h3 className="text-[22px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />men</h3>
+                   <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300">
-                      <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" width={60} height={60} alt="Young Male" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-blue-950">Below 17 Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#f5ecff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop" fill alt="Under 30 yrs Male" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">Under 30 yrs</span>
                    </div>
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300">
-                      <Image src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" width={60} height={60} alt="Adult Male" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-blue-950">18 - 40 Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#eef7fc] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&h=300&fit=crop" fill alt="30 - 45 yrs Male" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">30 - 45 yrs</span>
                    </div>
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300">
-                      <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" width={60} height={60} alt="Senior Male" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-blue-950">40+ Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#fcefee] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop" fill alt="45 - 60 yrs Male" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">45 - 60 yrs</span>
                    </div>
                 </div>
+                <div className="w-10 h-[3px] bg-gray-200 mx-auto mt-6 rounded-full overflow-hidden flex"><div className="w-1/2 h-full bg-[#0A2540]"></div></div>
             </div>
             
-            {/* Female Card */}
-            <div className="bg-[#fff5f8] rounded-3xl p-6 border border-pink-50 relative overflow-hidden">
+            {/* Female Card Section */}
+            <div className="flex flex-col mt-6 md:mt-0">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-[22px] font-black text-pink-900">Female</h3>
-                   <span className="text-pink-600 text-sm font-bold flex items-center">View All <ChevronRight size={16}/></span>
+                   <h3 className="text-[22px] font-bold text-[#0A2540] tracking-tight">Routine health checkups for <br />women</h3>
+                   <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-pink-300">
-                      <Image src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?w=100&h=100&fit=crop" width={60} height={60} alt="Young Female" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-pink-900">Below 17 Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#faedff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=300&fit=crop" fill alt="Under 30 yrs Female" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">Under 30 yrs</span>
                    </div>
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-pink-300">
-                      <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" width={60} height={60} alt="Adult Female" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-pink-900">18 - 40 Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#eefaff] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop" fill alt="30 - 45 yrs Female" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">30 - 45 yrs</span>
                    </div>
-                   <div className="flex-1 bg-white rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:border-pink-300">
-                      <Image src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" width={60} height={60} alt="Senior Female" className="rounded-full mb-3 shadow-md" />
-                      <span className="text-sm font-bold text-pink-900">40+ Years</span>
+                   <div className="flex-1 flex flex-col items-center">
+                      <div className="w-full aspect-[4/5] bg-[#fff0ea] rounded-2xl overflow-hidden mb-3 relative flex items-end shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)]">
+                         <Image src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop" fill alt="45 - 60 yrs Female" className="object-cover" />
+                      </div>
+                      <span className="text-[13px] font-medium text-gray-800 tracking-tight">45 - 60 yrs</span>
                    </div>
                 </div>
+                <div className="w-10 h-[3px] bg-gray-200 mx-auto mt-6 rounded-full overflow-hidden flex"><div className="w-1/2 h-full bg-[#0A2540]"></div></div>
             </div>
          </div>
       </section>
@@ -267,6 +278,54 @@ export default function PremiumLandingPage() {
                   <div className="w-1/2 relative h-full">
                       <Image src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=400&fit=crop" fill alt="Phlebotomist" className="object-cover rounded-xl" />
                   </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* 5.5 WHY BOOK TESTS WITH US */}
+      <section className="bg-gray-50/70 py-20 mt-16 border-t border-gray-100">
+         <div className="max-w-[1280px] mx-auto px-6">
+            <h2 className="text-[26px] md:text-[30px] font-bold text-[#0A2540] mb-10 tracking-tight">Why Book Tests With Us?</h2>
+            
+            <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 items-stretch">
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center transition-shadow hover:shadow-md">
+                     <div className="w-[42px] h-[42px] rounded-xl bg-pink-50 flex items-center justify-center mb-4 text-pink-500 shadow-sm border border-pink-100/50">
+                        <Syringe size={20} strokeWidth={2.5} />
+                     </div>
+                     <p className="text-[#475569] font-medium text-[14px] leading-[1.6]">
+                        One-prick sample collection by trained & experienced experts at home
+                     </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center transition-shadow hover:shadow-md">
+                     <div className="w-[42px] h-[42px] rounded-xl bg-teal-50 flex items-center justify-center mb-4 text-teal-600 shadow-sm border border-teal-100/50">
+                        <Thermometer size={20} strokeWidth={2.5} />
+                     </div>
+                     <p className="text-[#475569] font-medium text-[14px] leading-[1.6]">
+                        Sample Transfer in Temperature-controlled Bags, Maintaining Sample Integrity
+                     </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center transition-shadow hover:shadow-md">
+                     <div className="w-[42px] h-[42px] rounded-xl bg-blue-50 flex items-center justify-center mb-4 text-blue-600 shadow-sm border border-blue-100/50">
+                        <Beaker size={20} strokeWidth={2.5} />
+                     </div>
+                     <p className="text-[#475569] font-medium text-[14px] leading-[1.6]">
+                        Sample Processing at Self-Owned Certified Laboratories under strict quality protocols
+                     </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-2xl shadow-[0_0_0_1px_rgba(20,50,150,0.05),_0_8px_24px_rgba(20,50,150,0.06)] border-blue-100 flex flex-col justify-center relative overflow-hidden transition-shadow hover:shadow-[0_0_0_1px_rgba(20,50,150,0.08),_0_12px_28px_rgba(20,50,150,0.1)]">
+                     <div className="w-[42px] h-[42px] rounded-xl bg-orange-50 flex items-center justify-center mb-4 text-orange-500 shadow-sm border border-orange-100/50">
+                        <FileText size={20} strokeWidth={2.5} />
+                     </div>
+                     <p className="text-[#475569] font-medium text-[14px] leading-[1.6]">
+                        Smart, Easy-to-understand, verified reports by MD pathologists
+                     </p>
+                  </div>
+               </div>
+               
+               <div className="relative rounded-[24px] overflow-hidden shadow-sm h-[320px] lg:h-auto border border-gray-100/50 bg-white ml-0 lg:ml-6">
+                  <Image src="/images/why_us_lab.png" fill alt="Lab Technician" className="object-cover" />
                </div>
             </div>
          </div>

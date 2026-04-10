@@ -27,7 +27,8 @@ import {
   Handshake,
   Dna,
   Newspaper,
-  Activity
+  Activity,
+  Sparkles
 } from 'lucide-react';
 
 const navItems = [
@@ -227,24 +228,27 @@ export default function Header() {
       )}
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between bg-white px-6 py-3 pb-safe border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between bg-white px-6 py-2 pb-safe border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
         {[
           { href: '/', icon: Home, label: 'Home' },
           { href: '/dashboard/reports', icon: FileText, label: 'Reports' },
-          { href: '/health-tools/bmi', icon: Heart, label: 'Care', featured: true },
+          { href: '/health-tools/bmi', icon: Sparkles, label: 'Care', featured: true },
           { href: '/dashboard/bookings', icon: Calendar, label: 'Bookings' },
           { href: '/dashboard/profile', icon: User, label: 'Profile' },
         ].map((item) => (
-           <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
+           <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1 flex-1 relative z-10">
                 {item.featured ? (
-                   <div className="absolute -top-5 flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white shadow-lg border-[3px] border-white">
-                        <item.icon size={22} />
-                   </div>
+                   <>
+                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr from-[#6b1e5b] to-[#dc2626] text-white shadow-md relative -top-1">
+                          <item.icon size={24} strokeWidth={2} className="text-white fill-white/10" />
+                     </div>
+                     <span className="text-[10px] font-bold text-gray-800 -mt-2">{item.label}</span>
+                   </>
                 ) : (
-                    <>
+                    <div className="flex flex-col items-center gap-1 pt-2 pb-1">
                         <item.icon size={22} className={isActive(item.href) ? 'text-red-600' : 'text-gray-400'} />
                         <span className={`text-[10px] font-bold ${isActive(item.href) ? 'text-red-600' : 'text-gray-500'}`}>{item.label}</span>
-                    </>
+                    </div>
                 )}
            </Link>
         ))}
