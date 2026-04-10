@@ -56,14 +56,14 @@ export default function PremiumLandingPage() {
               </h1>
               
               {/* Search Bar matching reference */}
-              <div className="relative bg-white rounded-full flex items-center p-1.5 pr-4 shadow-sm w-full max-w-xl">
-                 <div className="pl-4 pr-3"><Search size={18} className="text-gray-400" /></div>
+              <div className="relative bg-white rounded-full flex items-center p-1.5 pr-3 sm:pr-4 shadow-sm w-full max-w-xl">
+                 <div className="pl-3 sm:pl-4 pr-2 sm:pr-3 flex-shrink-0"><Search size={18} className="text-gray-400" /></div>
                  <input 
                     type="text" 
                     placeholder="Search Tests" 
-                    className="flex-1 py-2.5 text-[15px] outline-none text-gray-700 bg-transparent font-medium"
+                    className="flex-1 min-w-0 py-2.5 text-[14px] sm:text-[15px] outline-none text-gray-700 bg-transparent font-medium truncate"
                  />
-                 <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
+                 <div className="flex items-center gap-2 sm:gap-3 border-l border-gray-200 pl-2 sm:pl-4 ml-1 sm:ml-2 flex-shrink-0">
                     <Mic size={18} className="text-red-500 cursor-pointer hover:text-red-600" />
                     <Upload size={18} className="text-blue-900 cursor-pointer hover:text-blue-700" />
                  </div>
