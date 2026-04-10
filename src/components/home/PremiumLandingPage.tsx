@@ -87,17 +87,17 @@ export default function PremiumLandingPage() {
               </div>
            </div>
 
-           {/* Center Doctor Image (Absolute Positioned for perfect center) */}
-           <div className="hidden lg:block absolute left-1/2 bottom-0 -translate-x-1/2 w-[240px] h-[300px] z-10">
-              <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-t-[40px] drop-shadow-xl" />
+           {/* Center Doctor Image (Floating & Vertically Centered) */}
+           <div className="hidden lg:block absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[280px] z-10 rounded-[30px] shadow-[0_12px_30px_rgb(0,0,0,0.15)]">
+              <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-[30px]" />
               
-              {/* Shield overlay - Fixed duplicate relative/absolute bug */}
-              <div className="absolute -left-12 bottom-6 z-30 transform scale-105">
-                 <div className="w-[110px] h-28 rounded-b-[40px] rounded-t-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2.5px] border-white flex flex-col items-center justify-center p-2 relative overflow-hidden bg-[#1a365d]">
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#1a365d] to-[#0f213e]" />
+              {/* Shield overlay - Floating on left */}
+              <div className="absolute -left-12 top-[60%] -translate-y-1/2 z-30 transform scale-[1.05]">
+                 <div className="w-[110px] h-28 rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2.5px] border-white flex flex-col items-center justify-center p-2 relative overflow-hidden bg-[#1a365d]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a365d] to-[#0f213e]" />
                     <h2 className="relative z-10 text-white text-[32px] font-black italic drop-shadow-md leading-none mb-1">4x</h2>
                     <p className="relative z-10 text-white font-bold text-center leading-[1.1] tracking-wider text-[10px]">VALUE</p>
-                    <p className="relative z-10 text-blue-200 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
+                    <p className="relative z-10 text-white/70 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
                  </div>
               </div>
            </div>
