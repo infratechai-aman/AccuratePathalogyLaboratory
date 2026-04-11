@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Logo */}
         <div className="p-5 border-b border-gray-100 flex items-center justify-center">
           <Link href="/admin" className="flex items-center justify-center hover:opacity-90 transition-opacity">
-            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={180} height={60} className="object-contain" priority />
+            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={220} height={70} className="object-contain -my-4" priority />
           </Link>
         </div>
 
@@ -203,12 +203,8 @@ function AdminLoginGate({ onSuccess }: { onSuccess: (name: string, email: string
 
           <div className="p-8">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <Image src="/images/logo.png" alt="Accurate Labs" width={52} height={52} className="object-contain" />
-              <div>
-                <h1 className="text-2xl font-black text-[#0A2540] uppercase tracking-wide leading-none" style={{ fontFamily: 'Georgia, serif' }}>Accurate</h1>
-                <p className="text-[11px] font-bold text-[#E53E3E] uppercase tracking-widest mt-0.5">Pathology Laboratory</p>
-              </div>
+            <div className="flex items-center justify-center mb-10">
+              <Image src="/images/logo.png" alt="Accurate Labs" width={240} height={80} className="object-contain -my-4" />
             </div>
 
             <div className="mb-6">
