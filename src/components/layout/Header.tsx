@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCity } from '@/context/CityContext';
@@ -72,9 +73,8 @@ export default function Header() {
           <div className="mx-auto flex max-w-[1280px] items-center justify-between">
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
-              <Link href="/" className="flex flex-col">
-                 <span className="text-3xl font-black uppercase tracking-wider leading-none text-[#0F213E]" style={{ fontFamily: 'Georgia, serif' }}>Accurate</span>
-                 <span className="text-[11px] font-bold tracking-[0.1em] text-[#E53E3E] uppercase mt-1">Pathalogy Laboratory</span>
+              <Link href="/">
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={160} height={45} className="object-contain" priority />
               </Link>
               
               {/* Location Dropdown */}

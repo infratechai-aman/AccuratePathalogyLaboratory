@@ -103,9 +103,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3"></div>
            
            <div className="relative z-10">
-              <div className="flex flex-col gap-0 mb-8">
-                 <span className="text-3xl font-black uppercase tracking-wider leading-none text-white" style={{ fontFamily: 'Georgia, serif' }}>Accurate</span>
-                 <span className="text-[10px] font-bold tracking-[0.1em] text-red-500 uppercase mt-1">Pathalogy Laboratory</span>
+              <div className="mb-8 bg-white py-2 px-3 rounded-xl w-max">
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={160} height={45} className="object-contain" priority />
               </div>
               
               <h3 className="text-3xl font-black text-white leading-tight mb-4">
