@@ -6,16 +6,16 @@ import Image from 'next/image';
 import { Mail, MapPin, MessageCircle, Phone, Dna, ShieldCheck, Crosshair, MapPin as LocationMarker } from 'lucide-react';
 
 const quickLinks = [
-  { href: '/services/face-scan', label: 'Face Scan' },
-  { href: '/partner', label: 'Partner With Us' },
+  { href: '/tests/smart-full-body', label: 'Book a Test' },
+  { href: '/partnerships', label: 'Partner With Us' },
   { href: '/franchise', label: 'Franchise Opportunity' },
-  { href: '/faqs', label: 'FAQs' },
+  { href: '/support', label: 'FAQs & Help' },
   { href: '/about', label: 'About Us' },
-  { href: '/labs', label: 'Our Labs' },
-  { href: '/esg', label: 'ESG Practices' },
-  { href: '/contact', label: 'Have a Query' },
-  { href: '/careers', label: 'Career' },
-  { href: '/compliance', label: 'Statutory Compliance' },
+  { href: '/locations', label: 'Our Labs' },
+  { href: '/about', label: 'ESG Practices' },
+  { href: '/support', label: 'Have a Query' },
+  { href: '/about', label: 'Career' },
+  { href: '/about', label: 'Statutory Compliance' },
 ];
 
 export default function Footer() {

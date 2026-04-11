@@ -43,14 +43,14 @@ const navItems = [
 const sidebarItems = [
   { href: '/locations', label: 'Lab Locations', icon: Building2 },
   { href: '/support', label: 'Help & Support', icon: Headphones },
-  { href: '/blog', label: 'Health Blog', icon: BookOpen },
+  { href: '/about', label: 'Health Blog', icon: BookOpen },
   { href: '/about', label: 'About Us', icon: Info },
-  { href: '/quality', label: 'Quality Assurance At Accurate Pathology Laboratory', icon: ShieldCheck },
-  { href: '/partnerships', label: 'Partnerships', icon: Users },
-  { href: '/franchise', label: 'Franchise Opportunity', icon: Handshake },
-  { href: '/genetics', label: 'Genetics', icon: Dna },
-  { href: '/media', label: 'Media Coverage', icon: Newspaper },
-  { href: '/radiology', label: 'Radiology', icon: Activity },
+  { href: '/about', label: 'Quality Assurance At Accurate Pathology Laboratory', icon: ShieldCheck },
+  { href: '/support', label: 'Partnerships', icon: Users },
+  { href: '/support', label: 'Franchise Opportunity', icon: Handshake },
+  { href: '/search', label: 'Genetics', icon: Dna },
+  { href: '/about', label: 'Media Coverage', icon: Newspaper },
+  { href: '/search', label: 'Radiology', icon: Activity },
 ];
 
 export default function Header() {

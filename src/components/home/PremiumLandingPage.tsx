@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { sampleTests } from '@/lib/sample-data';
 import {
@@ -50,7 +51,12 @@ export default function PremiumLandingPage() {
         <div className="max-w-[1280px] h-full mx-auto px-6 relative flex flex-col lg:flex-row justify-between pt-6 lg:pt-0 pb-10 lg:pb-0 lg:items-center">
            
            {/* Left Content */}
-           <div className="w-full lg:w-[38%] space-y-5 z-20">
+           <motion.div 
+             initial={{ opacity: 0, x: -30 }}
+             animate={{ opacity: 1, x: 0 }}
+             transition={{ duration: 0.6, ease: "easeOut" }}
+             className="w-full lg:w-[38%] space-y-5 z-20"
+           >
               <h1 className="text-[30px] font-bold text-white mb-2 leading-tight drop-shadow-md">
                  Looking for a test ?
               </h1>
@@ -85,25 +91,40 @@ export default function PremiumLandingPage() {
                     <span className="font-bold text-[14px] text-gray-800">Create Your Own Package</span>
                  </button>
               </div>
-           </div>
+           </motion.div>
 
            {/* Center Doctor Image (Floating & Vertically Centered) */}
-           <div className="hidden lg:block absolute left-[60%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[280px] z-10 rounded-[30px] shadow-[0_12px_30px_rgb(0,0,0,0.15)]">
+           <motion.div 
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+             className="hidden lg:block absolute left-[60%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[280px] z-10 rounded-[30px] shadow-[0_12px_30px_rgb(0,0,0,0.15)]"
+           >
               <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Doctor" fill className="object-cover object-[center_top] rounded-[30px]" />
               
               {/* Shield overlay - Floating on left */}
-              <div className="absolute -left-12 top-[60%] -translate-y-1/2 z-30 transform scale-[1.05]">
+              <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: "-50%" }}
+                 transition={{ duration: 0.5, delay: 0.5 }}
+                 className="absolute -left-12 top-[60%] z-30 transform scale-[1.05]"
+              >
                  <div className="w-[110px] h-28 rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.25)] border-[2.5px] border-white flex flex-col items-center justify-center p-2 relative overflow-hidden bg-[#1a365d]">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1a365d] to-[#0f213e]" />
                     <h2 className="relative z-10 text-white text-[32px] font-black italic drop-shadow-md leading-none mb-1">4x</h2>
                     <p className="relative z-10 text-white font-bold text-center leading-[1.1] tracking-wider text-[10px]">VALUE</p>
                     <p className="relative z-10 text-white/70 text-[5px] uppercase tracking-widest mt-1 text-center font-bold">WITH EVERY TEST</p>
                  </div>
-              </div>
-           </div>
+              </motion.div>
+           </motion.div>
 
            {/* Right Benefits List */}
-           <div className="hidden lg:flex w-[35%] lg:w-[32%] justify-end items-center z-20">
+           <motion.div 
+             initial={{ opacity: 0, x: 30 }}
+             animate={{ opacity: 1, x: 0 }}
+             transition={{ duration: 0.6, delay: 0.3 }}
+             className="hidden lg:flex w-[35%] lg:w-[32%] justify-end items-center z-20"
+           >
               <div className="flex flex-col space-y-2.5 z-10 text-blue-950 font-bold w-[220px] flex-shrink-0">
                  <div className="text-[17px] leading-[1.2] mb-1 font-extrabold text-[#1a365d]">
                     Delivering <span className="text-[#3b82f6] italic font-black">Complete Care</span> <br/>for Better Health
@@ -114,16 +135,24 @@ export default function PremiumLandingPage() {
                    { icon: Stethoscope, text: 'REPORT CONSULTATION' },
                    { icon: Apple, text: 'DIET PLAN' }
                  ].map((b, i) => (
-                    <div key={i} className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#ffffff] px-3 py-2 rounded-full shadow-[0_2px_8px_rgb(0,0,0,0.04)] text-[#1a365d] border border-blue-50 hover:bg-blue-50 transition-colors cursor-default">
+                    <motion.div 
+                      key={i} 
+                      whileHover={{ scale: 1.02 }}
+                      className="flex items-center gap-2.5 text-[10px] uppercase tracking-wider bg-[#ffffff] px-3 py-2 rounded-full shadow-[0_2px_8px_rgb(0,0,0,0.04)] text-[#1a365d] border border-blue-50 hover:bg-blue-50 transition-colors cursor-default"
+                    >
                        <b.icon size={14} className="text-[#3b82f6]" />
                        {b.text}
-                    </div>
+                    </motion.div>
                  ))}
-                 <button className="bg-[#e60000] shadow-[0_4px_14px_0_rgb(230,0,0,0.39)] text-white px-6 py-2.5 rounded-full uppercase font-black text-[13px] self-start mt-3 hover:bg-red-700 hover:shadow-[0_6px_20px_0_rgb(230,0,0,0.45)] transition-all transform hover:-translate-y-0.5">
+                 <motion.button 
+                   whileHover={{ scale: 1.05 }}
+                   whileTap={{ scale: 0.95 }}
+                   className="bg-[#e60000] shadow-[0_4px_14px_0_rgb(230,0,0,0.39)] text-white px-6 py-2.5 rounded-full uppercase font-black text-[13px] self-start mt-3 hover:bg-red-700 hover:shadow-[0_6px_20px_0_rgb(230,0,0,0.45)] transition-all transform hover:-translate-y-0.5"
+                 >
                     BOOK NOW
-                 </button>
+                 </motion.button>
               </div>
-           </div>
+           </motion.div>
         </div>
       </section>
 
@@ -137,7 +166,12 @@ export default function PremiumLandingPage() {
          </div>
 
          <div className="relative group">
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+            >
                {[
                   { label: 'Full Body', icon: User },
                   { label: 'Heart', icon: Heart, tag: 'Most Booked' },
@@ -146,7 +180,11 @@ export default function PremiumLandingPage() {
                   { label: 'Diabetes', icon: Droplets },
                   { label: 'Thyroid', icon: Shield },
                ].map((pill, idx) => (
-                  <div key={idx} className="flex-shrink-0 relative flex items-center gap-4 bg-white border border-gray-100/80 rounded-2xl px-6 py-4 shadow-sm hover:shadow-md transition-all cursor-pointer min-w-[200px]">
+                  <motion.div 
+                     key={idx} 
+                     whileHover={{ y: -5 }}
+                     className="flex-shrink-0 relative flex items-center gap-4 bg-white border border-gray-100/80 rounded-2xl px-6 py-4 shadow-sm hover:shadow-md transition-all cursor-pointer min-w-[200px]"
+                  >
                      {pill.tag && (
                         <div className="absolute -top-2 right-4 bg-pink-50 text-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-20 shadow-sm border border-pink-100">
                            <TrendingUp size={12} strokeWidth={3} className="text-red-500" /> {pill.tag}
@@ -162,12 +200,12 @@ export default function PremiumLandingPage() {
                         <pill.icon size={26} strokeWidth={1.5} className="relative z-10 text-gray-800" />
                      </div>
                      <span className="font-bold text-[15px] text-gray-800">{pill.label}</span>
-                  </div>
+                  </motion.div>
                ))}
                
                {/* Spacer for right arrow */}
                <div className="min-w-[40px] md:hidden"></div>
-            </div>
+            </motion.div>
 
             {/* Right Scroll Indicator */}
             <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none items-center justify-end z-10 pr-2">
@@ -180,7 +218,13 @@ export default function PremiumLandingPage() {
 
       {/* 3. HEALTH CHECKUPS BY AGE & GENDER */}
       <section className="max-w-[1280px] mx-auto px-6 pt-16">
-         <div className="grid md:grid-cols-2 gap-8">
+         <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="grid md:grid-cols-2 gap-8"
+         >
             {/* Male Card Section */}
             <div className="flex flex-col">
                 <div className="flex justify-between items-center mb-6">
@@ -236,20 +280,26 @@ export default function PremiumLandingPage() {
                    </Link>
                 </div>
             </div>
-         </div>
+         </motion.div>
       </section>
 
       {/* 3.5 FAMILY CARE PACKAGES */}
       <section className="max-w-[1280px] mx-auto px-6 pt-20">
-         <div className="flex justify-between items-center mb-8">
-            <h2 className="text-[26px] font-bold text-blue-950 tracking-tight">Family Care Packages</h2>
-            <div className="flex gap-2 hidden md:flex">
-               <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-blue-900"><ChevronRight className="rotate-180" size={20}/></button>
-               <button className="w-10 h-10 rounded-full bg-blue-950 text-white flex items-center justify-center hover:bg-blue-800"><ChevronRight size={20}/></button>
+         <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+         >
+            <div className="flex justify-between items-center mb-8">
+               <h2 className="text-[26px] font-bold text-blue-950 tracking-tight">Family Care Packages</h2>
+               <div className="flex gap-2 hidden md:flex">
+                  <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-blue-900"><ChevronRight className="rotate-180" size={20}/></button>
+                  <button className="w-10 h-10 rounded-full bg-blue-950 text-white flex items-center justify-center hover:bg-blue-800"><ChevronRight size={20}/></button>
+               </div>
             </div>
-         </div>
 
-         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
             <Link href="/tests/annual-advance" className="min-w-[320px] sm:min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
                   <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-green-700 transition-colors">Free HsCRP With <br/>Annual Health Checkup</h3>
@@ -313,6 +363,7 @@ export default function PremiumLandingPage() {
                </div>
             </Link>
          </div>
+         </motion.div>
       </section>
 
       {/* 4. TOP BOOKED LAB TESTS & PACKAGES */}
@@ -332,22 +383,31 @@ export default function PremiumLandingPage() {
       {/* 5. ACTIVE MILLIONS + (TRUST FEATURES) */}
       <section className="max-w-[1280px] mx-auto px-6 pt-20">
          <h2 className="text-[20px] font-bold text-blue-950 mb-6">A part of our active millions +</h2>
-         <div className="grid md:grid-cols-3 gap-6">
-            <div className="border border-gray-200 rounded-3xl p-6 flex flex-col justify-center h-48 relative overflow-hidden bg-white">
+         <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+               hidden: { opacity: 0 },
+               visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+            }}
+            className="grid md:grid-cols-3 gap-6"
+         >
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border border-gray-200 rounded-3xl p-6 flex flex-col justify-center h-48 relative overflow-hidden bg-white">
                <div className="bg-red-50 text-red-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
                   <Shield size={24} />
                </div>
                <h3 className="font-black text-gray-900 text-lg leading-tight">Advanced diagnostic lab setup based on latest technology.</h3>
                <span className="text-blue-500 text-xs font-bold mt-2 hover:underline cursor-pointer">Know More</span>
-            </div>
-            <div className="border border-gray-200 rounded-3xl p-6 flex flex-col justify-center h-48 relative overflow-hidden bg-white">
+            </motion.div>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border border-gray-200 rounded-3xl p-6 flex flex-col justify-center h-48 relative overflow-hidden bg-white">
                <div className="bg-blue-50 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
                   <MonitorCheck size={24} />
                </div>
                <h3 className="font-black text-gray-900 text-lg leading-tight">Thousands Trust us! <br/>Most advanced lab testing system.</h3>
                <span className="text-blue-500 text-xs font-bold mt-2 hover:underline cursor-pointer">Know More</span>
-            </div>
-            <div className="border border-gray-200 rounded-3xl p-6 h-48 relative overflow-hidden bg-[#0A2540] text-white">
+            </motion.div>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border border-gray-200 rounded-3xl p-6 h-48 relative overflow-hidden bg-[#0A2540] text-white">
                <div className="flex h-full items-center">
                   <div className="w-1/2">
                      <h3 className="text-lg font-bold leading-tight">Free Home Sample Pickup!</h3>
@@ -357,8 +417,8 @@ export default function PremiumLandingPage() {
                       <Image src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=400&fit=crop" fill alt="Phlebotomist" className="object-cover rounded-xl" />
                   </div>
                </div>
-            </div>
-         </div>
+            </motion.div>
+         </motion.div>
       </section>
 
       {/* 5.5 WHY BOOK TESTS WITH US */}
@@ -412,10 +472,21 @@ export default function PremiumLandingPage() {
       {/* 6. DIFFERENT STAGES INFOGRAPHIC */}
       <section className="bg-white py-20 mt-16 pb-24 border-y border-gray-100">
          <div className="max-w-[1280px] mx-auto px-6">
-            <h2 className="text-[26px] md:text-[30px] font-bold text-blue-950 mb-2 leading-tight">5 Simple Steps to Manage Your Health with Accurate Pathology Laboratory</h2>
-            <p className="text-gray-500 font-medium mb-10 text-[15px]">Quick, Simple & Convenient; trusted care delivered to your doorstep.</p>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+               <h2 className="text-[26px] md:text-[30px] font-bold text-blue-950 mb-2 leading-tight">5 Simple Steps to Manage Your Health with Accurate Pathology Laboratory</h2>
+               <p className="text-gray-500 font-medium mb-10 text-[15px]">Quick, Simple & Convenient; trusted care delivered to your doorstep.</p>
+            </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <motion.div 
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true, margin: "-50px" }}
+               variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+               }}
+               className="grid grid-cols-1 md:grid-cols-5 gap-4"
+            >
                {[
                   {
                     num: 1,
@@ -463,7 +534,11 @@ export default function PremiumLandingPage() {
                     desc: 'Consult with our expert medical team to get actionable insights to improve your health.'
                   }
                ].map((step) => (
-                  <div key={step.num} className="bg-white border hover:border-gray-300 rounded-3xl border-gray-100 p-5 shadow-sm hover:shadow-md transition-all flex flex-col group h-full">
+                  <motion.div 
+                     variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+                     key={step.num} 
+                     className="bg-white border hover:border-gray-300 rounded-3xl border-gray-100 p-5 shadow-sm hover:shadow-md transition-all flex flex-col group h-full"
+                  >
                      {/* Pill Header */}
                      <div className="flex justify-center mb-5">
                         <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${step.pillColors}`}>
@@ -484,9 +559,9 @@ export default function PremiumLandingPage() {
                      
                      <h3 className="font-extrabold text-blue-950 text-[15px] mb-3 leading-tight text-center px-1">{step.title}</h3>
                      <p className="text-[13px] text-gray-500 font-medium leading-[1.6] text-center px-1 flex-1">{step.desc}</p>
-                  </div>
+                  </motion.div>
                ))}
-            </div>
+            </motion.div>
          </div>
       </section>
 
@@ -606,16 +681,26 @@ export default function PremiumLandingPage() {
 
       {/* 11. CREATE YOUR OWN PACKAGE */}
       <section className="max-w-[1280px] mx-auto px-6 pt-16">
-         <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden flex flex-col md:flex-row items-center relative shadow-sm hover:shadow-md transition-all">
+         <motion.div 
+            initial={{ opacity: 0, scale: 0.98, y: 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white border border-gray-200 rounded-3xl overflow-hidden flex flex-col md:flex-row items-center relative shadow-sm hover:shadow-md transition-all"
+         >
              <div className="py-12 md:py-16 flex-1 z-10 w-full relative pl-8 md:pl-16 pr-8">
                  <div className="inline-flex items-center gap-1.5 bg-white text-gray-800 font-bold px-3 py-1.5 rounded-lg text-xs mb-4 border border-gray-200 shadow-sm">
                     <CheckCircle size={14} className="text-[#00d084] fill-[#00d084] text-white" /> Customise
                  </div>
                  <h2 className="text-3xl md:text-3xl font-black text-gray-800 mb-3 leading-tight tracking-tight">Create your Own Package</h2>
                  <p className="text-gray-500 font-medium max-w-sm mb-8 text-[15px]">Customise your package based on test you choose and get extra 10% OFF</p>
-                 <button className="bg-[#1b4372] text-white font-bold px-6 py-3 rounded-xl shadow-[0_4px_12px_rgba(27,67,114,0.3)] hover:bg-[#0f2c4e] transition-colors flex items-center gap-2">
+                 <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-[#1b4372] text-white font-bold px-6 py-3 rounded-xl shadow-[0_4px_12px_rgba(27,67,114,0.3)] hover:bg-[#0f2c4e] transition-colors flex items-center gap-2"
+                 >
                     Create Now <ArrowRight strokeWidth={2.5} size={16} className="ml-1" />
-                 </button>
+                 </motion.button>
              </div>
              <div className="h-[250px] md:h-[350px] w-full md:w-[45%] relative mt-6 md:mt-0">
                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/50 to-white z-10 md:hidden" />
@@ -624,7 +709,7 @@ export default function PremiumLandingPage() {
                     <Dna size={200} strokeWidth={1.5} />
                  </div>
              </div>
-         </div>
+         </motion.div>
       </section>
 
       {/* 12. CUSTOMER REVIEWS */}
