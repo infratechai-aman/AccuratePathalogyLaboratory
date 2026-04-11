@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   TrendingUp, Calendar, IndianRupee, Users, FlaskConical,
-  ArrowUpRight, ArrowDownRight, Package, Clock, CheckCircle,
-  AlertCircle, Activity, ChevronRight
+  ArrowUpRight, ArrowDownRight, Package, Clock,
+  CheckCircle, Activity, ChevronRight
 } from 'lucide-react';
 import { getBookings, getTests, getUsers } from '@/lib/services/db';
 import { Booking, Test, User } from '@/lib/types';
@@ -99,10 +99,10 @@ export default function AdminDashboard() {
     .slice(0, 5);
 
   const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
-    pending:    { bg: 'bg-amber-100',   text: 'text-amber-700',   label: 'Pending' },
-    processing: { bg: 'bg-blue-100',    text: 'text-blue-700',    label: 'Processing' },
-    completed:  { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Completed' },
-    cancelled:  { bg: 'bg-red-100',     text: 'text-red-700',     label: 'Cancelled' },
+    pending:   { bg: 'bg-amber-100',   text: 'text-amber-700',   label: 'Pending' },
+    collected: { bg: 'bg-blue-100',    text: 'text-blue-700',    label: 'Sample Collected' },
+    processing:{ bg: 'bg-purple-100',  text: 'text-purple-700',  label: 'Processing' },
+    completed: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Completed' },
   };
 
   return (
@@ -135,10 +135,10 @@ export default function AdminDashboard() {
       {/* Status quick-filters */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Pending',    count: pendingBookings,                                   color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   icon: Clock },
-          { label: 'Processing', count: bookings.filter(b=>b.status==='processing').length, color: 'text-blue-600',   bg: 'bg-blue-50',   border: 'border-blue-200',   icon: Activity },
-          { label: 'Completed',  count: completedBookings,                                  color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', icon: CheckCircle },
-          { label: 'Cancelled',  count: bookings.filter(b=>b.status==='cancelled').length,  color: 'text-red-600',    bg: 'bg-red-50',    border: 'border-red-200',    icon: AlertCircle },
+          { label: 'Pending',          count: pendingBookings,                                    color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   icon: Clock },
+          { label: 'Collected',        count: bookings.filter(b=>b.status==='collected').length,  color: 'text-blue-600',    bg: 'bg-blue-50',    border: 'border-blue-200',    icon: Activity },
+          { label: 'Processing',       count: bookings.filter(b=>b.status==='processing').length, color: 'text-purple-600',  bg: 'bg-purple-50',  border: 'border-purple-200',  icon: Activity },
+          { label: 'Completed',        count: completedBookings,                                  color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', icon: CheckCircle },
         ].map(s => (
           <Link
             key={s.label}
