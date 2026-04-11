@@ -70,7 +70,7 @@ export default function Header() {
       <header className="hidden lg:block sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Row */}
         <div className="bg-white px-6">
-          <div className="mx-auto flex max-w-[1280px] items-center justify-between h-[64px]">
+          <div className="mx-auto flex max-w-[1280px] items-center justify-between h-[70px]">
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
               <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
