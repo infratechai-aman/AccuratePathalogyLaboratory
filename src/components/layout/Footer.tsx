@@ -28,7 +28,7 @@ export default function Footer() {
             <div className="flex flex-col border-b border-white/10 lg:border-none pb-8 lg:pb-0">
               {/* Logo Area */}
               <div className="flex items-center gap-3 mb-6">
-                <Dna size={32} strokeWidth={2} className="text-[#E53E3E]" />
+                <Image src="/images/logo.png" alt="Accurate Labs Icon" width={48} height={48} className="object-contain brightness-0 invert" />
                 <div className="flex flex-col leading-none">
                   <span className="text-[26px] font-bold tracking-tight text-white m-0">Accurate</span>
                   <span className="text-[15px] text-[#E53E3E] font-medium tracking-wide">Pathology Laboratory</span>

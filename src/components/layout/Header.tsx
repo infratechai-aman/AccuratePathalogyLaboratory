@@ -73,9 +73,12 @@ export default function Header() {
           <div className="mx-auto flex max-w-[1280px] items-center justify-between">
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
-              <Link href="/" className="flex flex-col hover:opacity-90 transition-opacity">
-                 <span className="text-[32px] font-black uppercase tracking-wider leading-[0.9] text-[#0A2540]" style={{ fontFamily: 'Georgia, serif' }}>Accurate</span>
-                 <span className="text-[10.5px] font-bold tracking-[0.12em] text-[#E53E3E] uppercase mt-1">Pathology Laboratory</span>
+              <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+                 <Image src="/images/logo.png" alt="Accurate Labs Icon" width={56} height={56} className="object-contain" />
+                 <div className="flex flex-col">
+                    <span className="text-[32px] font-black uppercase tracking-wider leading-[0.9] text-[#0A2540]" style={{ fontFamily: 'Georgia, serif' }}>Accurate</span>
+                    <span className="text-[10.5px] font-bold tracking-[0.12em] text-[#E53E3E] uppercase mt-1">Pathology Laboratory</span>
+                 </div>
               </Link>
               
               {/* Location Dropdown */}
