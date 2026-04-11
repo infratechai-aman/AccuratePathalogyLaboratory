@@ -1,22 +1,48 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { sampleBookings, sampleTests, sampleUsers } from '@/lib/sample-data';
 import {
   TrendingUp, Calendar, IndianRupee, Users, FlaskConical,
   ArrowUpRight, ArrowDownRight, Package
 } from 'lucide-react';
+import { getBookings, getTests, getUsers } from '@/lib/services/db';
+import { Booking, Test, User } from '@/lib/types';
 
 export default function AdminDashboard() {
-  const totalRevenue = sampleBookings.reduce((sum, b) => sum + b.totalAmount, 0);
-  const pendingBookings = sampleBookings.filter(b => b.status === 'pending').length;
-  const completedBookings = sampleBookings.filter(b => b.status === 'completed').length;
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [b, t, u] = await Promise.all([getBookings(), getTests(), getUsers()]);
+        setBookings(b);
+        setTests(t);
+        setUsers(u);
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <div className="p-10 text-white/50 animate-pulse text-center w-full">Loading dashboard data...</div>;
+  }
+
+  const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
+  const pendingBookings = bookings.filter(b => b.status === 'pending').length;
+  const completedBookings = bookings.filter(b => b.status === 'completed').length;
 
   const stats = [
     {
       label: 'Total Bookings',
-      value: sampleBookings.length.toString(),
+      value: bookings.length.toString(),
       change: '+12%',
       trend: 'up',
       icon: Calendar,
@@ -32,7 +58,7 @@ export default function AdminDashboard() {
     },
     {
       label: 'Active Users',
-      value: sampleUsers.filter(u => u.role === 'user').length.toString(),
+      value: users.filter(u => u.role === 'user').length.toString(),
       change: '+25%',
       trend: 'up',
       icon: Users,
@@ -49,7 +75,7 @@ export default function AdminDashboard() {
   ];
 
   // Top tests by category
-  const topTests = sampleTests
+  const topTests = tests
     .sort((a, b) => b.discount - a.discount)
     .slice(0, 5);
 
@@ -138,7 +164,7 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {sampleBookings.map((booking) => (
+              {bookings.slice(0, 5).map((booking) => (
                 <tr key={booking.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                   <td className="py-3 px-2 text-white/60 font-mono text-xs">{booking.id}</td>
                   <td className="py-3 px-2 text-white font-medium">{booking.patientName}</td>

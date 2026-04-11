@@ -1,15 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
-import { sampleBookings } from '@/lib/sample-data';
+import React, { useState, useEffect } from 'react';
+import { getBookings, updateBookingStatus } from '@/lib/services/db';
 import { BOOKING_STATUSES, Booking } from '@/lib/types';
 import { Download, Search } from 'lucide-react';
 
 export default function AdminBookingsPage() {
-  const [bookings, setBookings] = useState<Booking[]>(sampleBookings);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadBookings() {
+      try {
+        const data = await getBookings();
+        setBookings(data);
+      } catch (err) {
+        console.error('Failed to load bookings:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadBookings();
+  }, []);
 
   const filteredBookings = bookings.filter((booking) => {
     const matchSearch =
@@ -20,12 +35,18 @@ export default function AdminBookingsPage() {
     return matchSearch && matchStatus;
   });
 
-  const updateStatus = (bookingId: string, newStatus: Booking['status']) => {
-    setBookings((current) =>
-      current.map((booking) =>
-        booking.id === bookingId ? { ...booking, status: newStatus, updatedAt: new Date() } : booking
-      )
-    );
+  const updateStatus = async (bookingId: string, newStatus: Booking['status']) => {
+    try {
+      await updateBookingStatus(bookingId, newStatus);
+      setBookings((current) =>
+        current.map((booking) =>
+          booking.id === bookingId ? { ...booking, status: newStatus, updatedAt: new Date() } : booking
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      alert('Failed to update status in database');
+    }
   };
 
   const updatePhlebotomist = (bookingId: string, name: string) => {
@@ -49,6 +70,10 @@ export default function AdminBookingsPage() {
     link.click();
     URL.revokeObjectURL(url);
   };
+
+  if (loading) {
+    return <div className="p-10 text-white/50 animate-pulse text-center w-full">Loading bookings...</div>;
+  }
 
   return (
     <div className="space-y-6">
