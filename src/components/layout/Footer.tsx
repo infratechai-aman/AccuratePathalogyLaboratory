@@ -27,8 +27,12 @@ export default function Footer() {
             {/* Column 1: Brand & Text */}
             <div className="flex flex-col border-b border-white/10 lg:border-none pb-8 lg:pb-0">
               {/* Logo Area */}
-              <div className="flex items-center gap-3 mb-6 bg-white py-2 px-3 rounded-xl w-max">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={360} height={100} className="object-contain" />
+              <div className="flex items-center gap-3 mb-6">
+                <Dna size={32} strokeWidth={2} className="text-[#E53E3E]" />
+                <div className="flex flex-col leading-none">
+                  <span className="text-[26px] font-bold tracking-tight text-white m-0">Accurate</span>
+                  <span className="text-[15px] text-[#E53E3E] font-medium tracking-wide">Pathology Laboratory</span>
+                </div>
               </div>
 
               {/* Description Paragraph */}
