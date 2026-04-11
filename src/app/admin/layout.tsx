@@ -80,11 +80,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="fixed z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-[#0A2540]">
+      <aside className="fixed z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-white">
         {/* Logo */}
-        <div className="p-5 border-b border-white/10 flex items-center justify-center">
-          <Link href="/admin" className="bg-white rounded-xl px-4 py-2 flex items-center justify-center hover:opacity-90 transition-opacity">
-            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={130} height={55} className="object-contain" priority />
+        <div className="p-5 border-b border-gray-100 flex items-center justify-center">
+          <Link href="/admin" className="flex items-center justify-center hover:opacity-90 transition-opacity">
+            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={180} height={60} className="object-contain" priority />
           </Link>
         </div>
 
@@ -96,8 +96,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                 pathname === item.href
-                  ? 'bg-white text-[#0A2540]'
-                  : 'text-white/80 hover:text-white hover:bg-white/15'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
               }`}
             >
               <item.icon size={17} />
@@ -107,14 +107,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-white/10 space-y-1">
-          <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-white/50 hover:text-white hover:bg-white/10 transition-all">
+        <div className="p-3 border-t border-gray-100 space-y-1">
+          <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all">
             <ChevronRight size={17} className="rotate-180" />
             Back to Site
           </Link>
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-[#E53E3E]/80 hover:text-[#E53E3E] hover:bg-red-500/10 transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 transition-all"
           >
             <LogOut size={17} />
             Sign Out
