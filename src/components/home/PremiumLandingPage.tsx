@@ -239,6 +239,82 @@ export default function PremiumLandingPage() {
          </div>
       </section>
 
+      {/* 3.5 FAMILY CARE PACKAGES */}
+      <section className="max-w-[1280px] mx-auto px-6 pt-20">
+         <div className="flex justify-between items-center mb-8">
+            <h2 className="text-[26px] font-bold text-blue-950 tracking-tight">Family Care Packages</h2>
+            <div className="flex gap-2 hidden md:flex">
+               <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-blue-900"><ChevronRight className="rotate-180" size={20}/></button>
+               <button className="w-10 h-10 rounded-full bg-blue-950 text-white flex items-center justify-center hover:bg-blue-800"><ChevronRight size={20}/></button>
+            </div>
+         </div>
+
+         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            <div className="min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+               <div className="w-[60%] z-10 relative">
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Free HsCRP With <br/>Annual Health Checkup</h3>
+                  <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
+                     <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
+                       <span className="text-[9px] font-normal leading-none mb-0.5">Rs.8911/-</span>
+                       <span className="text-blue-950 font-black text-lg leading-none">Rs.1799/-</span>
+                     </span>
+                     <span className="text-blue-600 bg-blue-50 px-1 py-0.5 rounded text-[10px] font-bold self-end mb-0.5">80% OFF</span>
+                  </div>
+                  <span className="bg-black/5 text-gray-500 text-[10px] font-bold px-2 py-1 rounded">92 parameters</span>
+               </div>
+               <div className="z-10 mt-6 pt-4 border-t border-black/5 w-[65%] font-bold text-gray-800 text-xs">
+                  Recommended For <span className="font-black">Mothers</span>
+               </div>
+               <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-green-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <Image src="/images/family_care_bg_1.png" fill alt="Mothers" className="object-cover object-left-bottom drop-shadow-xl" />
+               </div>
+            </div>
+
+            <div className="min-w-[400px] md:min-w-[480px] bg-[#faf0ff] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+               <div className="w-[60%] z-10 relative">
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Annual Health Checkup-<br/>Advance Plus with<br/>Free HsCRP</h3>
+                  <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
+                     <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
+                       <span className="text-[9px] font-normal leading-none mb-0.5">Rs.11215/-</span>
+                       <span className="text-blue-950 font-black text-lg leading-none">Rs.2399/-</span>
+                     </span>
+                     <span className="text-blue-600 bg-blue-50 px-1 py-0.5 rounded text-[10px] font-bold self-end mb-0.5">79% OFF</span>
+                  </div>
+                  <span className="bg-black/5 text-gray-500 text-[10px] font-bold px-2 py-1 rounded">98 parameters</span>
+               </div>
+               <div className="z-10 mt-6 pt-4 border-t border-black/5 w-[65%] font-bold text-gray-800 text-xs">
+                  Recommended For <span className="font-black">Fathers</span>
+               </div>
+               <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-fuchsia-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <Image src="/images/family_care_bg_2.png" fill alt="Fathers" className="object-cover object-left-bottom drop-shadow-xl" />
+               </div>
+            </div>
+
+            <div className="min-w-[400px] md:min-w-[480px] bg-[#fcfbe8] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+               <div className="w-[60%] z-10 relative">
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Fit India Full Body <br/>Checkup with Vitamin B12</h3>
+                  <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
+                     <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
+                       <span className="text-[9px] font-normal leading-none mb-0.5">Rs.5636/-</span>
+                       <span className="text-blue-950 font-black text-lg leading-none">Rs.1399/-</span>
+                     </span>
+                     <span className="text-blue-600 bg-blue-50 px-1 py-0.5 rounded text-[10px] font-bold self-end mb-0.5">75% OFF</span>
+                  </div>
+                  <span className="bg-black/5 text-gray-500 text-[10px] font-bold px-2 py-1 rounded">90 parameters</span>
+               </div>
+               <div className="z-10 mt-6 pt-4 border-t border-black/5 w-[65%] font-bold text-gray-800 text-xs">
+                  Recommended For <span className="font-black">Women</span>
+               </div>
+               <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-yellow-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <Image src="/images/family_care_bg_3.png" fill alt="Women" className="object-cover object-left-bottom drop-shadow-xl" />
+               </div>
+            </div>
+         </div>
+      </section>
+
       {/* 4. TOP BOOKED LAB TESTS & PACKAGES */}
       <section className="max-w-[1280px] mx-auto px-6 pt-20">
          <div className="flex justify-between items-center mb-8">
@@ -268,7 +344,7 @@ export default function PremiumLandingPage() {
                <div className="bg-blue-50 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
                   <MonitorCheck size={24} />
                </div>
-               <h3 className="font-black text-gray-900 text-lg leading-tight">Millions Trust us! <br/>Most advanced lab testing system.</h3>
+               <h3 className="font-black text-gray-900 text-lg leading-tight">Thousands Trust us! <br/>Most advanced lab testing system.</h3>
                <span className="text-blue-500 text-xs font-bold mt-2 hover:underline cursor-pointer">Know More</span>
             </div>
             <div className="border border-gray-200 rounded-3xl p-6 h-48 relative overflow-hidden bg-[#0A2540] text-white">
@@ -451,7 +527,7 @@ export default function PremiumLandingPage() {
             </div>
             <div className="p-10 md:p-14 flex flex-col justify-center">
                <h2 className="text-4xl font-black text-blue-950 mb-2 leading-tight">
-                  TRUSTED By MILLIONS <br/><span className="text-red-500">For Accurate & Fast</span>
+                  TRUSTED By THOUSANDS <br/><span className="text-red-500">For Accurate & Fast</span>
                </h2>
                <p className="text-gray-600 text-sm mb-6">Enjoy Priority Sample Collection from the comfort of your home.</p>
                <ul className="space-y-3 mb-8">
@@ -503,21 +579,50 @@ export default function PremiumLandingPage() {
          </div>
       </section>
 
+      {/* 10.5 HEALTH CALCULATORS */}
+      <section className="max-w-[1280px] mx-auto px-6 pt-16">
+         <h2 className="text-[26px] font-bold text-gray-900 tracking-tight mb-2">Health Calculators</h2>
+         <p className="text-gray-500 font-medium mb-8 text-[15px]">Use our free tools to track and monitor your health metrics instantly</p>
+         
+         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+             {[
+               { title: 'Check BMI', desc: 'Quickly assess if your body weight is in the healthy range.', icon: Heart, bg: 'bg-[#f4f7f9] hover:bg-[#ebf2f8]', iconBg: 'bg-[#e3f0fa]', color: 'text-[#2a75bb]' },
+               { title: 'Heart Health', desc: "Calculate your heart's age and assess your cardiovascular health.", icon: Heart, bg: 'bg-[#fef4f6] hover:bg-[#fde9ee]', iconBg: 'bg-[#fae4e9]', color: 'text-[#e5688b]' },
+               { title: 'Pre-Diabetic', desc: 'Assess your risk of developing diabetes and take proactive steps towards prevention.', icon: Activity, bg: 'bg-[#f0fbf8] hover:bg-[#e4faf2]', iconBg: 'bg-[#dbf8ec]', color: 'text-[#28a183]' },
+               { title: 'Vitamin D', desc: "Find out if you're at risk of Vitamin D deficiency in under a minute.", icon: Heart, bg: 'bg-[#fbf7f6] hover:bg-[#fbefe8]', iconBg: 'bg-[#faebe4]', color: 'text-[#d96a56]' },
+               { title: 'Fever Symptom', desc: 'Check your fever symptoms and get instant test suggestions.', icon: Thermometer, bg: 'bg-[#faf4f8] hover:bg-[#f8e9f2]', iconBg: 'bg-[#f6e4ef]', color: 'text-[#7e5581]' },
+             ].map((calc, i) => (
+                <div key={i} className={`rounded-3xl border border-gray-100 p-6 pb-8 flex flex-col items-center text-center cursor-pointer hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all ${calc.bg}`}>
+                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${calc.iconBg} ${calc.color}`}>
+                      <calc.icon size={26} strokeWidth={1.5} />
+                   </div>
+                   <h3 className="font-bold text-gray-900 text-[16px] mb-2">{calc.title}</h3>
+                   <p className="text-gray-500 text-[13px] leading-[1.6] mb-5 flex-1">{calc.desc}</p>
+                   <span className={`text-[14px] font-bold ${calc.color} transition-colors group-hover:underline`}>Try Now &rarr;</span>
+                </div>
+             ))}
+         </div>
+      </section>
+
       {/* 11. CREATE YOUR OWN PACKAGE */}
       <section className="max-w-[1280px] mx-auto px-6 pt-16">
-         <div className="bg-gradient-to-r from-[#031d40] to-[#0a2f5c] rounded-[32px] overflow-hidden flex flex-col md:flex-row items-center relative pl-8 md:pl-16 pr-8 border border-blue-900 shadow-xl">
-             <div className="py-12 md:py-20 flex-1 z-10 w-full relative">
-                 <div className="inline-flex bg-[#123e75] text-blue-100 font-bold px-3 py-1 rounded text-xs mb-4">
-                    CUSTOMIZE
+         <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden flex flex-col md:flex-row items-center relative shadow-sm hover:shadow-md transition-all">
+             <div className="py-12 md:py-16 flex-1 z-10 w-full relative pl-8 md:pl-16 pr-8">
+                 <div className="inline-flex items-center gap-1.5 bg-white text-gray-800 font-bold px-3 py-1.5 rounded-lg text-xs mb-4 border border-gray-200 shadow-sm">
+                    <CheckCircle size={14} className="text-[#00d084] fill-[#00d084] text-white" /> Customise
                  </div>
-                 <h2 className="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">Create your Own Package</h2>
-                 <p className="text-blue-200 font-medium max-w-sm mb-8 text-sm">Choose exactly the tests you need, combine them, and get priority processing with extra savings.</p>
-                 <button className="bg-white text-blue-950 font-black px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-gray-100 transition-colors">
-                    Start Creating Now
+                 <h2 className="text-3xl md:text-3xl font-black text-gray-800 mb-3 leading-tight tracking-tight">Create your Own Package</h2>
+                 <p className="text-gray-500 font-medium max-w-sm mb-8 text-[15px]">Customise your package based on test you choose and get extra 10% OFF</p>
+                 <button className="bg-[#1b4372] text-white font-bold px-6 py-3 rounded-xl shadow-[0_4px_12px_rgba(27,67,114,0.3)] hover:bg-[#0f2c4e] transition-colors flex items-center gap-2">
+                    Create Now <ArrowRight strokeWidth={2.5} size={16} className="ml-1" />
                  </button>
              </div>
-             <div className="h-[300px] md:h-[400px] w-full md:w-[45%] relative">
-                 <Image src="https://images.unsplash.com/photo-1580281658626-ee379eb74b34?q=80&w=800&fit=crop" fill alt="Custom Package" className="object-cover object-center" />
+             <div className="h-[250px] md:h-[350px] w-full md:w-[45%] relative mt-6 md:mt-0">
+                 <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/50 to-white z-10 md:hidden" />
+                 <Image src="/images/create_package_pointing_girl.png" fill alt="Custom Package" className="object-contain object-bottom md:object-right-bottom relative z-20" />
+                 <div className="absolute top-10 right-10 text-gray-100 opacity-60 z-0">
+                    <Dna size={200} strokeWidth={1.5} />
+                 </div>
              </div>
          </div>
       </section>

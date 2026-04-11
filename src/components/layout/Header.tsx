@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCity } from '@/context/CityContext';
+import { useAuth } from '@/context/AuthContext';
+import AuthModal from '@/components/auth/AuthModal';
 import {
   Calendar,
   ChevronDown,
@@ -53,13 +55,16 @@ const sidebarItems = [
 export default function Header() {
   const { state } = useCart();
   const { selectedCity, setShowCityModal } = useCity();
+  const { user, appUser, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
 
   return (
     <>
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       {/* Desktop Header */}
       <header className="hidden lg:block sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Row */}
@@ -97,13 +102,34 @@ export default function Header() {
                   </span>
                 )}
               </Link>
-              <Link
-                href="/dashboard/profile"
-                className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2 text-sm font-bold text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300"
-              >
-                Profile
-                <User size={18} className="text-gray-700" />
-              </Link>
+              <div className="relative group">
+                {user ? (
+                  <>
+                    <Link
+                      href="/dashboard/profile"
+                      className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2 text-sm font-bold text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300"
+                    >
+                      {appUser?.name?.split(' ')[0] || 'Profile'}
+                      <div className="w-5 h-5 rounded-full bg-[#1b4372] text-white flex items-center justify-center text-[10px]">
+                         {appUser?.name?.[0]?.toUpperCase() || <User size={12} />}
+                      </div>
+                    </Link>
+                    <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col overflow-hidden">
+                      <Link href="/dashboard/bookings" className="px-4 py-3 text-sm font-medium hover:bg-gray-50 text-gray-700">My Bookings</Link>
+                      <Link href="/dashboard/profile" className="px-4 py-3 text-sm font-medium hover:bg-gray-50 text-gray-700">Profile Settings</Link>
+                      <button onClick={logout} className="px-4 py-3 text-sm font-medium text-left hover:bg-red-50 text-red-600 border-t border-gray-100">Sign Out</button>
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setAuthModalOpen(true)}
+                    className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2 text-sm font-bold text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300 bg-white"
+                  >
+                    Login / Sign up
+                    <User size={18} className="text-gray-700" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -217,11 +243,31 @@ export default function Header() {
             </div>
             
             {/* Bottom Login Action */}
-            <div className="p-4 bg-white border-t border-gray-200 mt-auto">
-                 <button className="flex items-center justify-center w-full gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-sm">
-                     <User size={18} />   
-                     Sign In / Log In
-                 </button>
+            <div className="p-4 bg-white border-t border-gray-200 mt-auto flex flex-col gap-2">
+                 {user ? (
+                   <>
+                     <div className="flex items-center gap-3 px-2 mb-2">
+                        <div className="w-10 h-10 rounded-full bg-[#1b4372] text-white flex items-center justify-center font-bold">
+                           {appUser?.name?.[0]?.toUpperCase() || <User size={20} />}
+                        </div>
+                        <div>
+                           <p className="text-sm font-bold text-gray-900">{appUser?.name || 'User'}</p>
+                           <p className="text-xs text-gray-500">{appUser?.phone || appUser?.email}</p>
+                        </div>
+                     </div>
+                     <Link href="/dashboard/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center w-full gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-sm">
+                         View Profile
+                     </Link>
+                     <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="flex items-center justify-center w-full gap-2 rounded-xl border border-red-200 bg-red-50 text-red-600 px-4 py-3 text-sm font-bold hover:bg-red-100 transition-colors shadow-sm">
+                         Sign Out
+                     </button>
+                   </>
+                 ) : (
+                   <button onClick={() => { setMobileMenuOpen(false); setAuthModalOpen(true); }} className="flex items-center justify-center w-full gap-2 rounded-xl border border-[#1b4372] bg-[#1b4372] text-white px-4 py-3 text-[15px] font-bold hover:bg-[#122e50] transition-colors shadow-sm">
+                       <User size={18} />   
+                       Sign In / Log In
+                   </button>
+                 )}
             </div>
           </nav>
         </div>

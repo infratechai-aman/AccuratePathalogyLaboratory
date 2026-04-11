@@ -40,6 +40,13 @@ export const getBookings = async (): Promise<Booking[]> => {
   return snapshot.docs.map(doc => convertTimestamp({ ...doc.data(), id: doc.id })) as Booking[];
 };
 
+export const getBookingsByUser = async (userId: string): Promise<Booking[]> => {
+  const bookingsCol = collection(db, 'bookings');
+  const q = query(bookingsCol, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => convertTimestamp({ ...doc.data(), id: doc.id })) as Booking[];
+};
+
 export const createBooking = async (bookingData: Omit<Booking, 'id'>): Promise<string> => {
   const bookingRef = doc(collection(db, 'bookings'));
   await setDoc(bookingRef, {
@@ -61,6 +68,35 @@ export const getUsers = async (): Promise<User[]> => {
   const usersCol = collection(db, 'users');
   const snapshot = await getDocs(usersCol);
   return snapshot.docs.map(doc => convertTimestamp({ ...doc.data(), uid: doc.id })) as User[];
+};
+
+export const getUserByUid = async (uid: string): Promise<User | null> => {
+  const docRef = doc(db, 'users', uid);
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) return null;
+  return convertTimestamp({ ...docSnap.data(), uid: docSnap.id }) as User;
+};
+
+export const createUserProfile = async (uid: string, data: Partial<User>): Promise<void> => {
+  const docRef = doc(db, 'users', uid);
+  await setDoc(docRef, {
+    ...data,
+    uid,
+    createdAt: Timestamp.now()
+  });
+};
+
+export const updateUserProfile = async (uid: string, data: Partial<User>): Promise<void> => {
+  const docRef = doc(db, 'users', uid);
+  await updateDoc(docRef, data);
+};
+
+// --- REPORTS ---
+export const getReportsByUser = async (userId: string): Promise<any[]> => {
+  const reportsCol = collection(db, 'reports');
+  const q = query(reportsCol, where('userId', '==', userId), orderBy('uploadedAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => convertTimestamp({ ...doc.data(), id: doc.id }));
 };
 
 // --- SLOTS ---
