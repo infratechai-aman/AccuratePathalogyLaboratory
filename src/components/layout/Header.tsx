@@ -69,12 +69,12 @@ export default function Header() {
       {/* Desktop Header */}
       <header className="hidden lg:block sticky top-0 z-50 bg-white shadow-sm">
         {/* Top Row */}
-        <div className="bg-white px-6 py-4">
-          <div className="mx-auto flex max-w-[1280px] items-center justify-between">
+        <div className="bg-white px-6">
+          <div className="mx-auto flex max-w-[1280px] items-center justify-between h-[56px]">
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
               <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={280} height={70} className="object-contain" priority />
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={280} height={70} className="object-contain -my-4" priority />
               </Link>
               
               {/* Location Dropdown */}
