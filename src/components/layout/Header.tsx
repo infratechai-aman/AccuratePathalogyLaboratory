@@ -176,23 +176,23 @@ export default function Header() {
 
       {/* Mobile Header */}
       <header className="lg:hidden sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between gap-3">
+        <div className="px-3 py-1.5">
+          <div className="flex items-center justify-between gap-2">
             <Link href="/" className="flex shrink-0">
-               <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={180} height={46} className="object-contain -my-3" priority />
+               <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={150} height={38} className="object-contain -my-2" priority />
             </Link>
 
-            <div className="flex items-center gap-3">
-              <div className="flex items-center border border-gray-200 rounded-full px-2 py-1" onClick={() => setShowCityModal(true)}>
-                  <MapPin size={12} className="text-gray-700 mr-1" />
-                  <span className="text-xs font-bold text-gray-900">{selectedCity || 'Hadapsar'}</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-gray-200 rounded-full px-2 py-1 whitespace-nowrap" onClick={() => setShowCityModal(true)}>
+                  <MapPin size={11} className="text-gray-700 mr-1 shrink-0" />
+                  <span className="text-[11px] font-bold text-gray-900 whitespace-nowrap">{selectedCity || 'Hadapsar'}</span>
               </div>
                 
               <Link
                 href="/cart"
-                className="relative flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="relative flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                <ShoppingCart size={14} />
+                <ShoppingCart size={13} />
                 {state.totalItems > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-bold text-white">
                     {state.totalItems}
@@ -201,9 +201,9 @@ export default function Header() {
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                <Menu size={14} />
+                <Menu size={13} />
               </button>
             </div>
           </div>
