@@ -55,13 +55,13 @@ function TestDetailContent() {
                 <div>
                   <span className="badge badge-info mb-2">{test.category}</span>
                   <h1 className="text-2xl font-bold text-brand-red mb-1">{test.name}</h1>
-                  <div className="flex items-center gap-4 text-sm text-text-muted">
-                    <span className="flex items-center gap-1.5">
-                      <Clock size={14} className="text-accent" />
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                      <Clock size={14} className="text-accent shrink-0" />
                       Reports in {test.reportTime} hours
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <FlaskConical size={14} className="text-accent" />
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                      <FlaskConical size={14} className="text-accent shrink-0" />
                       {test.testsCount || test.parameters.length} Parameters
                     </span>
                   </div>
@@ -79,9 +79,9 @@ function TestDetailContent() {
               <h2 className="text-lg font-bold text-primary mb-4">Parameters Included</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {test.parameters.map((param) => (
-                  <div key={param} className="flex items-center gap-2 p-3 rounded-xl bg-surface/50">
-                    <CheckCircle size={14} className="text-accent shrink-0" />
-                    <span className="text-sm text-primary">{param}</span>
+                  <div key={param} className="flex items-start gap-2 p-3 rounded-xl bg-surface/50 overflow-hidden">
+                    <CheckCircle size={14} className="text-accent shrink-0 mt-0.5" />
+                    <span className="text-sm text-primary min-w-0 break-words flex-1 leading-snug">{param}</span>
                   </div>
                 ))}
               </div>
@@ -93,9 +93,9 @@ function TestDetailContent() {
                 <h2 className="text-lg font-bold text-primary mb-4">Tests Included in Package</h2>
                 <div className="grid grid-cols-2 gap-2">
                   {test.includedTests.map((t) => (
-                    <div key={t} className="flex items-center gap-2 p-3 rounded-xl bg-accent/5 border border-accent/10">
-                      <Check size={14} className="text-accent shrink-0" />
-                      <span className="text-sm font-medium text-primary">{t}</span>
+                    <div key={t} className="flex items-start gap-2 p-3 rounded-xl bg-accent/5 border border-accent/10 overflow-hidden">
+                      <Check size={14} className="text-accent shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium text-primary min-w-0 break-words flex-1 leading-snug">{t}</span>
                     </div>
                   ))}
                 </div>
@@ -108,9 +108,9 @@ function TestDetailContent() {
                 <h2 className="text-lg font-bold text-primary mb-4">Preparation Required</h2>
                 <div className="space-y-2">
                   {test.preparations.map((prep) => (
-                    <div key={prep} className="flex items-start gap-2 p-3 rounded-xl bg-warning/5 border border-warning/10">
+                    <div key={prep} className="flex items-start gap-2 p-3 rounded-xl bg-warning/5 border border-warning/10 overflow-hidden">
                       <AlertCircle size={14} className="text-warning shrink-0 mt-0.5" />
-                      <span className="text-sm text-primary">{prep}</span>
+                      <span className="text-sm text-primary min-w-0 break-words flex-1 leading-snug">{prep}</span>
                     </div>
                   ))}
                 </div>
