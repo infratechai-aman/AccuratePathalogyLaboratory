@@ -83,8 +83,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="fixed z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-[#0A2540]">
         {/* Logo */}
         <div className="p-5 border-b border-white/10 flex items-center justify-center">
-          <Link href="/admin">
-            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={130} height={60} className="object-contain" priority />
+          <Link href="/admin" className="bg-white rounded-xl px-4 py-2 flex items-center justify-center hover:opacity-90 transition-opacity">
+            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={130} height={55} className="object-contain" priority />
           </Link>
         </div>
 
@@ -97,7 +97,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                 pathname === item.href
                   ? 'bg-white text-[#0A2540]'
-                  : 'text-white/60 hover:text-white hover:bg-white/10'
+                  : 'text-white/80 hover:text-white hover:bg-white/15'
               }`}
             >
               <item.icon size={17} />
