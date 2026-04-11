@@ -73,8 +73,8 @@ export default function Header() {
           <div className="mx-auto flex max-w-[1280px] items-center justify-between">
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
-              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity pb-1">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={240} height={60} className="object-contain" priority />
+              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={160} height={42} className="object-contain" priority />
               </Link>
               
               {/* Location Dropdown */}
