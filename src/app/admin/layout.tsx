@@ -82,13 +82,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className="fixed z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-[#0A2540]">
         {/* Logo */}
-        <div className="p-5 border-b border-white/10">
-          <Link href="/admin" className="flex items-center gap-3">
-            <Image src="/images/logo.png" alt="Accurate Labs" width={42} height={42} className="object-contain" />
-            <div>
-              <p className="font-black text-white text-base leading-none" style={{ fontFamily: 'Georgia, serif' }}>ACCURATE</p>
-              <p className="text-[10px] text-[#E53E3E] font-semibold tracking-widest mt-0.5">ADMIN PANEL</p>
-            </div>
+        <div className="p-5 border-b border-white/10 flex items-center justify-center">
+          <Link href="/admin">
+            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={130} height={60} className="object-contain" priority />
           </Link>
         </div>
 
