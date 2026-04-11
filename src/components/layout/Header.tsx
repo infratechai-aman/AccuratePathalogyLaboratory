@@ -63,6 +63,13 @@ export default function Header() {
 
   const isActive = (path: string) => pathname === path;
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('login=true') && !user) {
+      setAuthModalOpen(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [user]);
+
   return (
     <>
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />

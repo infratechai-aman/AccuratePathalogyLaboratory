@@ -123,7 +123,7 @@ function TestDetailContent() {
                 <h2 className="text-lg font-bold text-primary mb-4">Related Tests</h2>
                 <div className="flex gap-4 overflow-x-auto scroll-container pb-4">
                   {relatedTests.map((t) => (
-                    <div key={t.id} className="shrink-0">
+                    <div key={t.id} className="w-[300px] max-w-[85vw] shrink-0">
                       <TestCard test={t} />
                     </div>
                   ))}
