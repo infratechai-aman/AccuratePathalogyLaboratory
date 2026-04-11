@@ -171,9 +171,8 @@ export default function Header() {
       <header className="lg:hidden sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between gap-3">
-            <Link href="/" className="flex flex-col">
-               <span className="text-xl font-black uppercase tracking-wider leading-none text-[#0F213E]" style={{ fontFamily: 'Georgia, serif' }}>Accurate</span>
-               <span className="text-[7.5px] font-bold tracking-[0.1em] text-[#E53E3E] uppercase mt-0.5">Pathalogy Laboratory</span>
+            <Link href="/" className="flex shrink-0">
+               <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={180} height={46} className="object-contain -my-3" priority />
             </Link>
 
             <div className="flex items-center gap-3">
