@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { sampleSlots } from '@/lib/sample-data';
 import { CITIES, Slot } from '@/lib/types';
-import { Plus, Calendar, Clock, MapPin, X, Save, Trash2, Users } from 'lucide-react';
+import { Plus, Calendar, Clock, MapPin, Trash2, Users } from 'lucide-react';
 
 export default function AdminSlotsPage() {
   const [slots, setSlots] = useState<Slot[]>(sampleSlots);
@@ -81,8 +81,8 @@ export default function AdminSlotsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <p className="text-white/40 text-sm">{filteredSlots.length} slots</p>
-        <button onClick={() => setShowAdd(!showAdd)} className="btn-primary rounded-xl">
+        <p className="text-gray-500 font-semibold text-sm bg-white px-4 py-2 border border-gray-200 rounded-xl shadow-sm">{filteredSlots.length} slots found</p>
+        <button onClick={() => setShowAdd(!showAdd)} className="bg-[#0A2540] hover:bg-[#0e3460] text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors shadow-sm">
           <Plus size={16} /> Create Slots
         </button>
       </div>
@@ -90,60 +90,60 @@ export default function AdminSlotsPage() {
       {/* Filters */}
       <div className="flex gap-3">
         <select value={filterCity} onChange={e => setFilterCity(e.target.value)}
-          className="px-4 py-3 bg-[#1a2332] border border-white/10 rounded-xl text-sm text-white outline-none">
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#0A2540] font-semibold outline-none shadow-sm focus:border-[#0A2540]">
           <option value="">All Cities</option>
           {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
         <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
-          className="px-4 py-3 bg-[#1a2332] border border-white/10 rounded-xl text-sm text-white outline-none" />
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#0A2540] font-semibold outline-none shadow-sm focus:border-[#0A2540]" />
       </div>
 
       {/* Create form */}
       {showAdd && (
-        <div className="bg-[#1a2332] rounded-2xl border border-white/5 p-6 animate-fade-in-up">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 animate-fade-in-up">
           <div className="flex items-center gap-4 mb-4">
-            <button onClick={() => setBulkMode(false)} className={`text-sm font-semibold px-4 py-2 rounded-lg ${!bulkMode ? 'bg-accent/10 text-accent' : 'text-white/50'}`}>
+            <button onClick={() => setBulkMode(false)} className={`text-sm font-bold px-4 py-2 rounded-lg transition-colors ${!bulkMode ? 'bg-blue-50 text-blue-700' : 'text-gray-400 hover:text-[#0A2540]'}`}>
               Single Slot
             </button>
-            <button onClick={() => setBulkMode(true)} className={`text-sm font-semibold px-4 py-2 rounded-lg ${bulkMode ? 'bg-accent/10 text-accent' : 'text-white/50'}`}>
+            <button onClick={() => setBulkMode(true)} className={`text-sm font-bold px-4 py-2 rounded-lg transition-colors ${bulkMode ? 'bg-blue-50 text-blue-700' : 'text-gray-400 hover:text-[#0A2540]'}`}>
               Bulk Create
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
             <div>
-              <label className="block text-xs font-semibold text-white/50 mb-1">{bulkMode ? 'Start Date' : 'Date'}</label>
+              <label className="block text-xs font-bold text-gray-500 mb-1.5">{bulkMode ? 'Start Date' : 'Date'}</label>
               <input type="date" value={newSlot.date} onChange={e => setNewSlot({...newSlot, date: e.target.value})}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-accent" />
+                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm outline-none focus:border-[#0A2540]" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-white/50 mb-1">City</label>
+              <label className="block text-xs font-bold text-gray-500 mb-1.5">City</label>
               <select value={newSlot.city} onChange={e => setNewSlot({...newSlot, city: e.target.value})}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-accent">
-                {CITIES.map(c => <option key={c} value={c} className="bg-[#1a2332]">{c}</option>)}
+                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm outline-none focus:border-[#0A2540]">
+                {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-white/50 mb-1">Max Bookings</label>
+              <label className="block text-xs font-bold text-gray-500 mb-1.5">Max Bookings</label>
               <input type="number" value={newSlot.maxBookings} onChange={e => setNewSlot({...newSlot, maxBookings: Number(e.target.value)})}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-accent" />
+                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm outline-none focus:border-[#0A2540]" />
             </div>
             {bulkMode && (
               <div>
-                <label className="block text-xs font-semibold text-white/50 mb-1">Days</label>
+                <label className="block text-xs font-bold text-gray-500 mb-1.5">Days</label>
                 <input type="number" value={bulkDays} onChange={e => setBulkDays(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-accent" />
+                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm outline-none focus:border-[#0A2540]" />
               </div>
             )}
           </div>
 
           {bulkMode ? (
-            <button onClick={bulkCreate} className="btn-primary rounded-xl">
-              <Plus size={14} /> Create {bulkDays * 4} Slots
+            <button onClick={bulkCreate} className="bg-[#E53E3E] hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+              <Plus size={16} /> Create {bulkDays * 4} Slots
             </button>
           ) : (
-            <button onClick={addSlot} className="btn-primary rounded-xl">
-              <Plus size={14} /> Create Slot
+            <button onClick={addSlot} className="bg-[#E53E3E] hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+              <Plus size={16} /> Create Slot
             </button>
           )}
         </div>
@@ -151,39 +151,39 @@ export default function AdminSlotsPage() {
 
       {/* Slots by date */}
       {dates.map(date => (
-        <div key={date} className="bg-[#1a2332] rounded-2xl border border-white/5 overflow-hidden">
-          <div className="px-5 py-3 border-b border-white/5 flex items-center gap-2">
-            <Calendar size={14} className="text-accent" />
-            <span className="text-white font-semibold text-sm">
+        <div key={date} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
+            <Calendar size={16} className="text-[#0A2540]" />
+            <span className="text-[#0A2540] font-black text-sm">
               {new Date(date).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
-          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {filteredSlots.filter(s => s.date === date).map(slot => (
               <div key={slot.id} className={`p-4 rounded-xl border transition-colors ${
-                slot.available ? 'bg-white/5 border-white/5' : 'bg-red-400/5 border-red-400/10'
+                slot.available ? 'bg-white border-gray-200 hover:border-[#0A2540]' : 'bg-red-50/50 border-red-100'
               }`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="flex items-center gap-1.5 text-sm text-white">
-                    <Clock size={12} className="text-accent" /> {slot.time}
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`flex items-center gap-1.5 text-sm font-bold ${slot.available ? 'text-[#0A2540]' : 'text-gray-400'}`}>
+                    <Clock size={14} className={slot.available ? 'text-[#0A2540]' : 'text-gray-400'} /> {slot.time}
                   </span>
                   <div className="flex items-center gap-1">
                     <button onClick={() => toggleAvailable(slot.id)}
-                      className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
-                        slot.available ? 'bg-emerald-400/10 text-emerald-400' : 'bg-red-400/10 text-red-400'
+                      className={`text-[10px] uppercase font-black px-2 py-1 rounded-full tracking-wider ${
+                        slot.available ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
                       }`}>
                       {slot.available ? 'Active' : 'Disabled'}
                     </button>
-                    <button onClick={() => deleteSlot(slot.id)} className="p-1 text-white/20 hover:text-red-400 transition-colors">
-                      <Trash2 size={12} />
+                    <button onClick={() => deleteSlot(slot.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-white/40">
-                  <span className="flex items-center gap-1"><MapPin size={10} /> {slot.city}</span>
+                <div className="flex items-center justify-between text-xs font-semibold text-gray-500">
+                  <span className="flex items-center gap-1"><MapPin size={12} /> {slot.city}</span>
                   <span className="flex items-center gap-1">
-                    <Users size={10} /> {slot.currentBookings}/{slot.maxBookings}
-                    {slot.currentBookings >= slot.maxBookings && <span className="text-red-400 ml-1">Full</span>}
+                    <Users size={12} /> {slot.currentBookings}/{slot.maxBookings}
+                    {slot.currentBookings >= slot.maxBookings && <span className="text-red-500 font-bold ml-1">FULL</span>}
                   </span>
                 </div>
               </div>
@@ -191,6 +191,14 @@ export default function AdminSlotsPage() {
           </div>
         </div>
       ))}
+      
+      {dates.length === 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 flex flex-col items-center justify-center text-gray-400">
+          <Calendar size={48} className="mb-4 text-gray-200" />
+          <p className="font-semibold text-gray-500">No slots found</p>
+          <p className="text-sm mt-1">Adjust your filters or create new slots.</p>
+        </div>
+      )}
     </div>
   );
 }
