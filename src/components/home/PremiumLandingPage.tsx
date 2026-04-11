@@ -250,7 +250,7 @@ export default function PremiumLandingPage() {
          </div>
 
          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-            <Link href="/tests/annual-advance" className="min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
+            <Link href="/tests/annual-advance" className="min-w-[320px] sm:min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
                   <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-green-700 transition-colors">Free HsCRP With <br/>Annual Health Checkup</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
@@ -271,7 +271,7 @@ export default function PremiumLandingPage() {
                </div>
             </Link>
 
-            <Link href="/tests/annual-advance" className="min-w-[400px] md:min-w-[480px] bg-[#faf0ff] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
+            <Link href="/tests/annual-advance" className="min-w-[320px] sm:min-w-[400px] md:min-w-[480px] bg-[#faf0ff] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
                   <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-fuchsia-700 transition-colors">Annual Health Checkup-<br/>Advance Plus with<br/>Free HsCRP</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
@@ -292,7 +292,7 @@ export default function PremiumLandingPage() {
                </div>
             </Link>
 
-            <Link href="/tests/fit-india-essential" className="min-w-[400px] md:min-w-[480px] bg-[#fcfbe8] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
+            <Link href="/tests/fit-india-essential" className="min-w-[320px] sm:min-w-[400px] md:min-w-[480px] bg-[#fcfbe8] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
                   <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-yellow-700 transition-colors">Fit India Full Body <br/>Checkup with Vitamin B12</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">

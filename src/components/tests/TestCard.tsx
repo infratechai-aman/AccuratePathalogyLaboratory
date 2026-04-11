@@ -29,7 +29,7 @@ export default function TestCard({ test }: TestCardProps) {
       </div>
 
       <div>
-        <h3 className="test-card__title">{test.name}</h3>
+        <h3 className="test-card__title break-words" style={{ overflowWrap: 'anywhere' }}>{test.name}</h3>
         <Link href={`/tests/${test.id}`} className="test-card__link mt-2">
           View details
           <ChevronRight size={15} />

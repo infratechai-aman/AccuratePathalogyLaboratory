@@ -35,12 +35,12 @@ function TestDetailContent() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-text-muted">
-            <Link href="/" className="hover:text-primary">Home</Link>
-            <ChevronRight size={14} />
-            <Link href="/search" className="hover:text-primary">Tests</Link>
-            <ChevronRight size={14} />
-            <span className="text-primary font-medium">{test.name}</span>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
+            <Link href="/" className="hover:text-primary shrink-0">Home</Link>
+            <ChevronRight size={14} className="shrink-0" />
+            <Link href="/search" className="hover:text-primary shrink-0">Tests</Link>
+            <ChevronRight size={14} className="shrink-0" />
+            <span className="text-primary font-medium break-words">{test.name}</span>
           </div>
         </div>
       </div>
@@ -48,40 +48,40 @@ function TestDetailContent() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 min-w-0">
             {/* Test header */}
-            <div className="bg-white rounded-2xl border border-border/50 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
+            <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="min-w-0 flex-1">
                   <span className="badge badge-info mb-2">{test.category}</span>
-                  <h1 className="text-2xl font-bold text-brand-red mb-1">{test.name}</h1>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
-                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                  <h1 className="text-xl sm:text-2xl font-bold text-brand-red mb-1 break-words" style={{ overflowWrap: 'anywhere' }}>{test.name}</h1>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-text-muted">
+                    <span className="flex items-center gap-1.5">
                       <Clock size={14} className="text-accent shrink-0" />
                       Reports in {test.reportTime} hours
                     </span>
-                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                    <span className="flex items-center gap-1.5">
                       <FlaskConical size={14} className="text-accent shrink-0" />
                       {test.testsCount || test.parameters.length} Parameters
                     </span>
                   </div>
                 </div>
                 {test.isPackage && (
-                  <span className="badge bg-accent/10 text-accent font-bold">Package</span>
+                  <span className="badge bg-accent/10 text-accent font-bold shrink-0">Package</span>
                 )}
               </div>
 
-              <p className="text-text-muted leading-relaxed">{test.description}</p>
+              <p className="text-text-muted leading-relaxed break-words" style={{ overflowWrap: 'anywhere' }}>{test.description}</p>
             </div>
 
             {/* Parameters */}
-            <div className="bg-white rounded-2xl border border-border/50 p-6">
+            <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
               <h2 className="text-lg font-bold text-primary mb-4">Parameters Included</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {test.parameters.map((param) => (
-                  <div key={param} className="flex items-start gap-2 p-3 rounded-xl bg-surface/50 overflow-hidden">
+                  <div key={param} className="flex items-start gap-2 p-3 rounded-xl bg-surface/50 min-w-0">
                     <CheckCircle size={14} className="text-accent shrink-0 mt-0.5" />
-                    <span className="text-sm text-primary min-w-0 break-words flex-1 leading-snug">{param}</span>
+                    <span className="text-sm text-primary break-words leading-snug" style={{ overflowWrap: 'anywhere' }}>{param}</span>
                   </div>
                 ))}
               </div>
@@ -89,13 +89,13 @@ function TestDetailContent() {
 
             {/* Included tests (for packages) */}
             {test.isPackage && test.includedTests && (
-              <div className="bg-white rounded-2xl border border-border/50 p-6">
+              <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
                 <h2 className="text-lg font-bold text-primary mb-4">Tests Included in Package</h2>
                 <div className="grid grid-cols-2 gap-2">
                   {test.includedTests.map((t) => (
-                    <div key={t} className="flex items-start gap-2 p-3 rounded-xl bg-accent/5 border border-accent/10 overflow-hidden">
+                    <div key={t} className="flex items-start gap-2 p-3 rounded-xl bg-accent/5 border border-accent/10 min-w-0">
                       <Check size={14} className="text-accent shrink-0 mt-0.5" />
-                      <span className="text-sm font-medium text-primary min-w-0 break-words flex-1 leading-snug">{t}</span>
+                      <span className="text-sm font-medium text-primary break-words leading-snug" style={{ overflowWrap: 'anywhere' }}>{t}</span>
                     </div>
                   ))}
                 </div>
@@ -104,13 +104,13 @@ function TestDetailContent() {
 
             {/* Preparations */}
             {test.preparations && (
-              <div className="bg-white rounded-2xl border border-border/50 p-6">
+              <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
                 <h2 className="text-lg font-bold text-primary mb-4">Preparation Required</h2>
                 <div className="space-y-2">
                   {test.preparations.map((prep) => (
-                    <div key={prep} className="flex items-start gap-2 p-3 rounded-xl bg-warning/5 border border-warning/10 overflow-hidden">
+                    <div key={prep} className="flex items-start gap-2 p-3 rounded-xl bg-warning/5 border border-warning/10 min-w-0">
                       <AlertCircle size={14} className="text-warning shrink-0 mt-0.5" />
-                      <span className="text-sm text-primary min-w-0 break-words flex-1 leading-snug">{prep}</span>
+                      <span className="text-sm text-primary break-words leading-snug" style={{ overflowWrap: 'anywhere' }}>{prep}</span>
                     </div>
                   ))}
                 </div>
@@ -121,9 +121,9 @@ function TestDetailContent() {
             {relatedTests.length > 0 && (
               <div>
                 <h2 className="text-lg font-bold text-primary mb-4">Related Tests</h2>
-                <div className="flex gap-4 overflow-x-auto scroll-container pb-4">
+                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
                   {relatedTests.map((t) => (
-                    <div key={t.id} className="w-[300px] max-w-[85vw] shrink-0">
+                    <div key={t.id} className="w-[280px] max-w-[80vw] shrink-0">
                       <TestCard test={t} />
                     </div>
                   ))}
@@ -134,12 +134,12 @@ function TestDetailContent() {
 
           {/* Sticky sidebar - Price card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-[180px] bg-white rounded-2xl border border-border/50 p-6 shadow-sm">
-              <div className="flex items-baseline gap-3 mb-1">
+            <div className="sticky top-[180px] bg-white rounded-2xl border border-border/50 p-4 sm:p-6 shadow-sm">
+              <div className="flex flex-wrap items-baseline gap-3 mb-1">
                 <span className="text-3xl font-bold text-primary">₹{test.price}</span>
                 <span className="text-lg text-text-muted line-through">₹{test.originalPrice}</span>
               </div>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex flex-wrap items-center gap-2 mb-6">
                 <span className="badge badge-success text-sm">{test.discount}% Off</span>
                 <span className="text-sm text-text-muted">You save ₹{test.originalPrice - test.price}</span>
               </div>
