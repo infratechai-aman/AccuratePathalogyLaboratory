@@ -104,7 +104,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
            
            <div className="relative z-10">
               <div className="mb-8 bg-white py-2 px-3 rounded-xl w-max">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={160} height={45} className="object-contain" priority />
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={320} height={90} className="object-contain" priority />
               </div>
               
               <h3 className="text-3xl font-black text-white leading-tight mb-4">

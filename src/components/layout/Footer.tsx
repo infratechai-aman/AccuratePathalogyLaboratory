@@ -28,7 +28,7 @@ export default function Footer() {
             <div className="flex flex-col border-b border-white/10 lg:border-none pb-8 lg:pb-0">
               {/* Logo Area */}
               <div className="flex items-center gap-3 mb-6 bg-white py-2 px-3 rounded-xl w-max">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={180} height={50} className="object-contain" />
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={360} height={100} className="object-contain" />
               </div>
 
               {/* Description Paragraph */}

@@ -74,7 +74,7 @@ export default function Header() {
             {/* Left: Logo & Location */}
             <div className="flex items-center gap-8">
               <Link href="/">
-                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={160} height={45} className="object-contain" priority />
+                 <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={320} height={90} className="object-contain" priority />
               </Link>
               
               {/* Location Dropdown */}
