@@ -188,24 +188,24 @@ export default function PremiumLandingPage() {
                    <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   <Link href="/tests/smart-full-body" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_male_under30.png" fill alt="Under 30 yrs Male" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">Under 30 yrs</span>
-                   </div>
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   </Link>
+                   <Link href="/tests/fit-india-essential" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_male_30to45.png" fill alt="30 - 45 yrs Male" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">30 - 45 yrs</span>
-                   </div>
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   </Link>
+                   <Link href="/tests/annual-advance" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_male_45to60.png" fill alt="45 - 60 yrs Male" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">45 - 60 yrs</span>
-                   </div>
+                   </Link>
                 </div>
             </div>
             
@@ -216,24 +216,24 @@ export default function PremiumLandingPage() {
                    <span className="text-[#083b66] text-[13px] font-bold flex items-center gap-1 hover:underline underline-offset-4 cursor-pointer align-top self-start mt-2">View All</span>
                 </div>
                 <div className="flex gap-4">
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   <Link href="/tests/smart-full-body" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_female_under30.png" fill alt="Under 30 yrs Female" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">Under 30 yrs</span>
-                   </div>
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   </Link>
+                   <Link href="/tests/fit-india-essential" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_female_30to45.png" fill alt="30 - 45 yrs Female" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">30 - 45 yrs</span>
-                   </div>
-                   <div className="flex-1 flex flex-col gap-2 cursor-pointer group">
+                   </Link>
+                   <Link href="/tests/annual-advance" className="flex-1 flex flex-col gap-2 cursor-pointer group">
                       <div className="w-full aspect-[4/5] bg-[#dfdff0] rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100 group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all">
                          <Image src="/images/portrait_female_45to60.png" fill alt="45 - 60 yrs Female" className="object-cover" />
                       </div>
                       <span className="text-[13px] font-medium text-gray-800 text-center tracking-tight group-hover:text-red-500 transition-colors">45 - 60 yrs</span>
-                   </div>
+                   </Link>
                 </div>
             </div>
          </div>
@@ -250,9 +250,9 @@ export default function PremiumLandingPage() {
          </div>
 
          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-            <div className="min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+            <Link href="/tests/annual-advance" className="min-w-[400px] md:min-w-[480px] bg-[#e6f7eb] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
-                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Free HsCRP With <br/>Annual Health Checkup</h3>
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-green-700 transition-colors">Free HsCRP With <br/>Annual Health Checkup</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
                      <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
                        <span className="text-[9px] font-normal leading-none mb-0.5">Rs.8911/-</span>
@@ -266,14 +266,14 @@ export default function PremiumLandingPage() {
                   Recommended For <span className="font-black">Mothers</span>
                </div>
                <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
-                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-green-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-green-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-500"></div>
                   <Image src="/images/family_care_bg_1.png" fill alt="Mothers" className="object-cover object-left-bottom drop-shadow-xl" />
                </div>
-            </div>
+            </Link>
 
-            <div className="min-w-[400px] md:min-w-[480px] bg-[#faf0ff] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+            <Link href="/tests/annual-advance" className="min-w-[400px] md:min-w-[480px] bg-[#faf0ff] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
-                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Annual Health Checkup-<br/>Advance Plus with<br/>Free HsCRP</h3>
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-fuchsia-700 transition-colors">Annual Health Checkup-<br/>Advance Plus with<br/>Free HsCRP</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
                      <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
                        <span className="text-[9px] font-normal leading-none mb-0.5">Rs.11215/-</span>
@@ -287,14 +287,14 @@ export default function PremiumLandingPage() {
                   Recommended For <span className="font-black">Fathers</span>
                </div>
                <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
-                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-fuchsia-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-fuchsia-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-500"></div>
                   <Image src="/images/family_care_bg_2.png" fill alt="Fathers" className="object-cover object-left-bottom drop-shadow-xl" />
                </div>
-            </div>
+            </Link>
 
-            <div className="min-w-[400px] md:min-w-[480px] bg-[#fcfbe8] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px]">
+            <Link href="/tests/fit-india-essential" className="min-w-[400px] md:min-w-[480px] bg-[#fcfbe8] rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between h-[280px] hover:shadow-md transition-shadow group">
                <div className="w-[60%] z-10 relative">
-                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4">Fit India Full Body <br/>Checkup with Vitamin B12</h3>
+                  <h3 className="font-black text-gray-900 text-xl md:text-2xl leading-tight mb-4 group-hover:text-yellow-700 transition-colors">Fit India Full Body <br/>Checkup with Vitamin B12</h3>
                   <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg w-max mb-2 shadow-sm">
                      <span className="text-gray-400 line-through text-xs font-bold flex flex-col justify-center leading-none">
                        <span className="text-[9px] font-normal leading-none mb-0.5">Rs.5636/-</span>
@@ -308,10 +308,10 @@ export default function PremiumLandingPage() {
                   Recommended For <span className="font-black">Women</span>
                </div>
                <div className="absolute right-0 bottom-0 h-[100%] w-[50%] z-0">
-                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-yellow-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4"></div>
+                  <div className="absolute bottom-0 right-0 w-64 h-64 bg-yellow-200/50 rounded-full blur-2xl transform translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-500"></div>
                   <Image src="/images/family_care_bg_3.png" fill alt="Women" className="object-cover object-left-bottom drop-shadow-xl" />
                </div>
-            </div>
+            </Link>
          </div>
       </section>
 
