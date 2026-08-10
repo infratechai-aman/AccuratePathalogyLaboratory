@@ -31,7 +31,7 @@ function calculateTotals(items: CartItem[]): Omit<CartState, 'items'> {
     totalItems: items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice: items.reduce((sum, item) => sum + item.test.price * item.quantity, 0),
     totalDiscount: items.reduce(
-      (sum, item) => sum + (item.test.originalPrice - item.test.price) * item.quantity,
+      (sum, item) => sum + ((item.test.originalPrice || item.test.price) - item.test.price) * item.quantity,
       0
     ),
   };

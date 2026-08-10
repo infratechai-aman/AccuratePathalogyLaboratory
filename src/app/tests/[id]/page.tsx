@@ -62,7 +62,7 @@ function TestDetailContent() {
                     </span>
                     <span className="flex items-center gap-1.5">
                       <FlaskConical size={14} className="text-accent shrink-0" />
-                      {test.testsCount || test.parameters.length} Parameters
+                      {test.testsCount || test.parameters?.length || 0} Parameters
                     </span>
                   </div>
                 </div>
@@ -78,7 +78,7 @@ function TestDetailContent() {
             <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
               <h2 className="text-lg font-bold text-primary mb-4">Parameters Included</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {test.parameters.map((param) => (
+                {(test.parameters || []).map((param) => (
                   <div key={param} className="flex items-start gap-2 p-3 rounded-xl bg-surface/50 min-w-0">
                     <CheckCircle size={14} className="text-accent shrink-0 mt-0.5" />
                     <span className="text-sm text-primary break-words leading-snug" style={{ overflowWrap: 'anywhere' }}>{param}</span>
@@ -107,7 +107,7 @@ function TestDetailContent() {
               <div className="bg-white rounded-2xl border border-border/50 p-4 sm:p-6">
                 <h2 className="text-lg font-bold text-primary mb-4">Preparation Required</h2>
                 <div className="space-y-2">
-                  {test.preparations.map((prep) => (
+                  {(test.preparations || []).map((prep) => (
                     <div key={prep} className="flex items-start gap-2 p-3 rounded-xl bg-warning/5 border border-warning/10 min-w-0">
                       <AlertCircle size={14} className="text-warning shrink-0 mt-0.5" />
                       <span className="text-sm text-primary break-words leading-snug" style={{ overflowWrap: 'anywhere' }}>{prep}</span>
@@ -137,11 +137,11 @@ function TestDetailContent() {
             <div className="sticky top-[180px] bg-white rounded-2xl border border-border/50 p-4 sm:p-6 shadow-sm">
               <div className="flex flex-wrap items-baseline gap-3 mb-1">
                 <span className="text-3xl font-bold text-primary">₹{test.price}</span>
-                <span className="text-lg text-text-muted line-through">₹{test.originalPrice}</span>
+                <span className="text-lg text-text-muted line-through">₹{test.originalPrice || test.price}</span>
               </div>
               <div className="flex flex-wrap items-center gap-2 mb-6">
                 <span className="badge badge-success text-sm">{test.discount}% Off</span>
-                <span className="text-sm text-text-muted">You save ₹{test.originalPrice - test.price}</span>
+                <span className="text-sm text-text-muted">You save ₹{(test.originalPrice || test.price) - test.price}</span>
               </div>
 
               <button

@@ -26,8 +26,8 @@ function SearchContent() {
       results = results.filter(t =>
         t.name.toLowerCase().includes(q) ||
         t.category.toLowerCase().includes(q) ||
-        t.parameters.some(p => p.toLowerCase().includes(q)) ||
-        t.description.toLowerCase().includes(q)
+        t.parameters?.some(p => p.toLowerCase().includes(q)) ||
+        t.description?.toLowerCase().includes(q)
       );
     }
     if (selectedCategory) results = results.filter(t => t.category === selectedCategory);
@@ -35,7 +35,7 @@ function SearchContent() {
     switch (sortBy) {
       case 'price-low': results.sort((a, b) => a.price - b.price); break;
       case 'price-high': results.sort((a, b) => b.price - a.price); break;
-      case 'discount': results.sort((a, b) => b.discount - a.discount); break;
+      case 'discount': results.sort((a, b) => (b.discount || 0) - (a.discount || 0)); break;
     }
     return results;
   }, [query, selectedCategory, sortBy, priceRange]);

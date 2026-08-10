@@ -2,157 +2,292 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import { AdminProvider, useAdmin } from '@/context/AdminContext';
+import { ROLE_LABELS } from '@/lib/permissions';
+import './admin.css';
 import {
-  LayoutDashboard, FlaskConical, Calendar, FileText, Clock, Users,
-  ChevronRight, LogOut, Shield, Loader2, Mail, Lock, Eye, EyeOff
+  LayoutDashboard, Calendar, Users, FileText, Truck, FlaskConical,
+  Clock, IndianRupee, MessageSquare, BarChart3, Settings, ChevronDown,
+  ChevronRight, LogOut, Search, Bell, Menu, X, Mail, Lock,
+  Eye, EyeOff, Shield, Loader2, HelpCircle, Receipt
 } from 'lucide-react';
 
-const adminNav = [
+// ---- Sidebar Navigation Config ----
+const sidebarItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/tests', label: 'Tests', icon: FlaskConical },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
+  { href: '/admin/patients', label: 'Patients', icon: Users },
   { href: '/admin/reports', label: 'Reports', icon: FileText },
+  { href: '/admin/collections', label: 'Collections', icon: Truck },
+  { href: '/admin/tests', label: 'Tests & Packages', icon: FlaskConical },
   { href: '/admin/slots', label: 'Slots', icon: Clock },
-  { href: '/admin/users', label: 'Users', icon: Users },
+  {
+    label: 'Payments & Expenses',
+    icon: IndianRupee,
+    children: [
+      { href: '/admin/payments', label: 'Payments', icon: IndianRupee },
+      { href: '/admin/expenses', label: 'Expenses', icon: Receipt },
+    ],
+  },
+  { href: '/admin/messages', label: 'Messages', icon: MessageSquare, badge: 0 },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const [status, setStatus] = useState<'checking' | 'authorized' | 'unauthorized'>('unauthorized');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminName, setAdminName] = useState('');
 
   useEffect(() => {
-    // Only show loading if there's a persisted session to check
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setStatus('checking');
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setStatus('unauthorized');
-        return;
-      }
+    if (auth.currentUser) setStatus('checking');
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) { setStatus('unauthorized'); return; }
       setStatus('checking');
       try {
-        const docSnap = await getDoc(doc(db, 'users', user.uid));
-        if (docSnap.exists() && docSnap.data()?.isAdmin === true) {
-          setAdminEmail(user.email || '');
-          setAdminName(docSnap.data()?.name || 'Admin');
+        // Check staff collection first
+        const staffSnap = await getDoc(doc(db, 'staff', user.uid));
+        if (staffSnap.exists() && staffSnap.data()?.active !== false) {
           setStatus('authorized');
-        } else {
-          await signOut(auth);
-          setStatus('unauthorized');
+          return;
         }
+        // Fallback to legacy users collection
+        const userSnap = await getDoc(doc(db, 'users', user.uid));
+        if (userSnap.exists() && userSnap.data()?.isAdmin === true) {
+          setStatus('authorized');
+          return;
+        }
+        await signOut(auth);
+        setStatus('unauthorized');
       } catch {
         setStatus('unauthorized');
       }
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, []);
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    setStatus('unauthorized');
-  };
 
   if (status === 'checking') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 border-4 border-[#0A2540] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[#0A2540] text-sm font-semibold">Verifying...</p>
-        </div>
+      <div className="admin-loading" style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+        <div className="admin-spinner" />
+        <p className="admin-loading-text">Verifying access...</p>
       </div>
     );
   }
 
   if (status === 'unauthorized') {
-    return <AdminLoginGate onSuccess={(name, email) => { setAdminName(name); setAdminEmail(email); setStatus('authorized'); }} />;
+    return <AdminLoginGate onSuccess={() => setStatus('authorized')} />;
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <AdminProvider>
+      <AdminShell>{children}</AdminShell>
+    </AdminProvider>
+  );
+}
+
+// ================================================================
+// Admin Shell (Sidebar + Header + Content)
+// ================================================================
+function AdminShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const { staffUser, tenant, can } = useAdmin();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [paymentsOpen, setPaymentsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Auto-expand payments submenu if on a payments/expenses page
+  useEffect(() => {
+    if (pathname?.startsWith('/admin/payments') || pathname?.startsWith('/admin/expenses')) {
+      setPaymentsOpen(true);
+    }
+  }, [pathname]);
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+    window.location.href = '/admin';
+  };
+
+  const isActive = (href: string) => {
+    if (href === '/admin') return pathname === '/admin';
+    return pathname?.startsWith(href) || false;
+  };
+
+  const roleName = staffUser ? ROLE_LABELS[staffUser.role] : 'Admin';
+  const userName = staffUser?.name || 'Admin';
+  const today = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric'
+  });
+
+  return (
+    <div className="admin-panel" style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 39, background: 'rgba(0,0,0,0.3)' }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="fixed z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-white">
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         {/* Logo */}
-        <div className="p-5 border-b border-gray-100 flex items-center justify-center">
-          <Link href="/admin" className="flex items-center justify-center hover:opacity-90 transition-opacity">
-            <Image src="/images/logo.png" alt="Accurate Pathology Laboratory" width={220} height={70} className="object-contain -my-4" priority />
+        <div className="admin-sidebar-logo">
+          <Link href="/admin" style={{ textDecoration: 'none' }} onClick={() => setSidebarOpen(false)}>
+            <div className="admin-sidebar-logo-text">
+              <div style={{
+                width: 32, height: 32, borderRadius: 8,
+                background: 'linear-gradient(135deg, #0D9488, #0F766E)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontWeight: 800, fontSize: '0.8rem'
+              }}>
+                IT
+              </div>
+              InfraTechAI
+            </div>
+            <span className="admin-sidebar-logo-tagline">Smart Labs. Stronger Tomorrow.</span>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-1 overflow-auto">
-          {adminNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                pathname === item.href
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
-              }`}
-            >
-              <item.icon size={17} />
-              {item.label}
-            </Link>
-          ))}
+        <nav className="admin-sidebar-nav">
+          {sidebarItems.map((item) => {
+            // Items with children (Payments & Expenses)
+            if ('children' in item && item.children) {
+              const isChildActive = item.children.some(c => isActive(c.href));
+              return (
+                <div key={item.label}>
+                  <button
+                    className={`admin-nav-item ${isChildActive ? 'active' : ''}`}
+                    onClick={() => setPaymentsOpen(!paymentsOpen)}
+                  >
+                    <item.icon size={18} />
+                    <span style={{ flex: 1 }}>{item.label}</span>
+                    <ChevronDown
+                      size={14}
+                      style={{
+                        transform: paymentsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 200ms',
+                      }}
+                    />
+                  </button>
+                  {paymentsOpen && (
+                    <div className="admin-nav-submenu">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={`admin-nav-item ${isActive(child.href) ? 'active' : ''}`}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          <child.icon size={16} />
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // Regular items
+            const navItem = item as { href: string; label: string; icon: any; badge?: number };
+            return (
+              <Link
+                key={navItem.href}
+                href={navItem.href}
+                className={`admin-nav-item ${isActive(navItem.href) ? 'active' : ''}`}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <navItem.icon size={18} />
+                <span style={{ flex: 1 }}>{navItem.label}</span>
+                {navItem.badge !== undefined && navItem.badge > 0 && (
+                  <span className="admin-nav-badge">{navItem.badge}</span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-gray-100 space-y-1">
-          <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all">
-            <ChevronRight size={17} className="rotate-180" />
-            Back to Site
-          </Link>
+        <div className="admin-sidebar-footer">
+          <div className="admin-help-card">
+            <p><HelpCircle size={16} style={{ display: 'inline', verticalAlign: -3, marginRight: 4 }} />Need Help?</p>
+            <span>We&apos;re here to support you</span>
+            <button className="admin-help-btn">Contact Support</button>
+          </div>
+
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 transition-all"
+            className="admin-nav-item"
+            style={{ marginTop: 8, color: '#DC2626' }}
           >
-            <LogOut size={17} />
+            <LogOut size={18} />
             Sign Out
           </button>
+
+          <div className="admin-version">© 2025 InfraTechAI. All rights reserved.</div>
+          <div className="admin-version">Version 1.0.0</div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="flex-1 ml-64">
-        {/* Top bar */}
-        <header className="sticky top-0 z-30 border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-[#0A2540] font-bold text-lg leading-none">
-                {adminNav.find(n => n.href === pathname)?.label || 'Dashboard'}
-              </h2>
-              <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
-                <span>Admin</span>
-                <ChevronRight size={10} />
-                <span className="text-gray-600">
-                  {adminNav.find(n => n.href === pathname)?.label || 'Dashboard'}
-                </span>
-              </div>
+      {/* Main Content */}
+      <div className="admin-main">
+        {/* Header */}
+        <header className="admin-header">
+          {/* Mobile menu toggle */}
+          <button
+            className="admin-mobile-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+
+          {/* Search */}
+          <div className="admin-header-search">
+            <Search size={16} style={{ color: '#94A3B8', flexShrink: 0 }} />
+            <input
+              type="text"
+              placeholder="Search patients, bookings, tests..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          {/* Right side */}
+          <div className="admin-header-actions">
+            {/* Date */}
+            <div className="admin-date-picker" style={{ display: 'none' }}>
+              {/* Hidden on mobile */}
             </div>
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-sm font-bold text-[#0A2540]">{adminName}</p>
-                <p className="text-xs text-gray-400">{adminEmail}</p>
+            <span className="admin-date-picker" suppressHydrationWarning>
+              <Calendar size={14} />
+              {today}
+            </span>
+
+            {/* Notifications */}
+            <Link href="/admin/messages" className="admin-header-notif">
+              <Bell size={20} />
+              <span className="admin-header-notif-badge">3</span>
+            </Link>
+
+            {/* User */}
+            <div className="admin-header-user">
+              <div className="admin-header-user-info">
+                <div className="admin-header-user-name">{userName}</div>
+                <div className="admin-header-user-role">{roleName}</div>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[#0A2540] flex items-center justify-center text-white font-bold text-sm">
-                {adminName.charAt(0).toUpperCase()}
+              <div className="admin-header-avatar">
+                {userName.charAt(0).toUpperCase()}
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="p-6">
+        {/* Page Content */}
+        <main className="admin-content">
           {children}
         </main>
       </div>
@@ -160,8 +295,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 }
 
-// ---- Admin Login Gate ----
-function AdminLoginGate({ onSuccess }: { onSuccess: (name: string, email: string) => void }) {
+// ================================================================
+// Admin Login Gate
+// ================================================================
+function AdminLoginGate({ onSuccess }: { onSuccess: () => void }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -174,13 +311,23 @@ function AdminLoginGate({ onSuccess }: { onSuccess: (name: string, email: string
     setLoading(true);
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
-      const docSnap = await getDoc(doc(db, 'users', cred.user.uid));
-      if (docSnap.exists() && docSnap.data()?.isAdmin === true) {
-        onSuccess(docSnap.data()?.name || 'Admin', cred.user.email || '');
-      } else {
-        await signOut(auth);
-        setError('Access denied. You do not have admin privileges.');
+
+      // Check staff collection first
+      const staffSnap = await getDoc(doc(db, 'staff', cred.user.uid));
+      if (staffSnap.exists() && staffSnap.data()?.active !== false) {
+        onSuccess();
+        return;
       }
+
+      // Fallback to legacy users collection
+      const userSnap = await getDoc(doc(db, 'users', cred.user.uid));
+      if (userSnap.exists() && userSnap.data()?.isAdmin === true) {
+        onSuccess();
+        return;
+      }
+
+      await signOut(auth);
+      setError('Access denied. You do not have admin privileges.');
     } catch (err: any) {
       const code = err?.code || '';
       if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
@@ -194,77 +341,120 @@ function AdminLoginGate({ onSuccess }: { onSuccess: (name: string, email: string
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          {/* Top accent bar */}
-          <div className="h-1.5 bg-gradient-to-r from-[#0A2540] via-[#1a4a7c] to-[#E53E3E]" />
+    <div className="admin-panel" style={{
+      minHeight: '100vh', background: '#F8FAFC',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+    }}>
+      <div style={{ width: '100%', maxWidth: 420 }}>
+        <div className="admin-card" style={{ overflow: 'hidden' }}>
+          {/* Top accent */}
+          <div style={{
+            height: 4,
+            background: 'linear-gradient(90deg, #0D9488, #059669, #0F766E)'
+          }} />
 
-          <div className="p-8">
-            {/* Header */}
-            <div className="flex items-center justify-center mb-10">
-              <Image src="/images/logo.png" alt="Accurate Labs" width={240} height={80} className="object-contain -my-4" />
+          <div style={{ padding: 32 }}>
+            {/* Logo */}
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: 'linear-gradient(135deg, #0D9488, #0F766E)',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontWeight: 800, fontSize: '1.1rem', marginBottom: 12
+              }}>
+                IT
+              </div>
+              <h1 style={{
+                fontSize: '1.3rem', fontWeight: 800, color: '#0F172A',
+                margin: '0 0 4px', letterSpacing: '-0.02em'
+              }}>
+                InfraTechAI
+              </h1>
+              <p style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                Smart Labs. Stronger Tomorrow.
+              </p>
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-[#0A2540]">Admin Sign In</h2>
-              <p className="text-sm text-gray-500 mt-1">Access restricted to authorized administrators only.</p>
+            <div style={{ marginBottom: 24 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A' }}>
+                Admin Sign In
+              </h2>
+              <p style={{ fontSize: '0.82rem', color: '#64748B', marginTop: 4 }}>
+                Access restricted to authorized staff only.
+              </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              {/* Email */}
+            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
-                <div className="relative">
-                  <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <label className="admin-label">Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{
+                    position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+                    color: '#94A3B8'
+                  }} />
                   <input
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0A2540]/20 focus:border-[#0A2540] transition-all bg-gray-50"
-                    placeholder="admin@accuratepathlabs.com"
+                    className="admin-input"
+                    style={{ paddingLeft: 36 }}
+                    placeholder="admin@lab.com"
                     required
                   />
                 </div>
               </div>
 
-              {/* Password */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
-                <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <label className="admin-label">Password</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{
+                    position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+                    color: '#94A3B8'
+                  }} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0A2540]/20 focus:border-[#0A2540] transition-all bg-gray-50"
+                    className="admin-input"
+                    style={{ paddingLeft: 36, paddingRight: 40 }}
                     placeholder="••••••••"
                     required
                   />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                      background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer'
+                    }}
+                  >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
-              {/* Error */}
               {error && (
-                <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-                  <Shield size={15} className="text-red-500 mt-0.5 shrink-0" />
-                  <p className="text-red-600 text-sm">{error}</p>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  background: '#FEE2E2', borderRadius: 10, padding: '10px 14px'
+                }}>
+                  <Shield size={15} style={{ color: '#DC2626', flexShrink: 0 }} />
+                  <p style={{ fontSize: '0.82rem', color: '#DC2626', margin: 0 }}>{error}</p>
                 </div>
               )}
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#0A2540] hover:bg-[#0e3460] text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-60 flex items-center justify-center gap-2 text-sm mt-2"
+                className="admin-btn admin-btn-primary"
+                style={{
+                  width: '100%', padding: '12px 16px', fontSize: '0.875rem',
+                  marginTop: 4, opacity: loading ? 0.7 : 1
+                }}
               >
                 {loading ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={16} style={{ animation: 'admin-spin 0.7s linear infinite' }} />
                     Signing in...
                   </>
                 ) : (
@@ -276,15 +466,19 @@ function AdminLoginGate({ onSuccess }: { onSuccess: (name: string, email: string
               </button>
             </form>
 
-            <p className="text-center text-xs text-gray-300 mt-6">
-              Unauthorized access to this portal is strictly prohibited.
+            <p style={{
+              textAlign: 'center', fontSize: '0.68rem', color: '#94A3B8', marginTop: 24
+            }}>
+              Unauthorized access is strictly prohibited.
             </p>
           </div>
         </div>
 
-        {/* Back link */}
-        <p className="text-center mt-4">
-          <Link href="/" className="text-sm text-gray-500 hover:text-[#0A2540] font-medium transition-colors">
+        <p style={{ textAlign: 'center', marginTop: 16 }}>
+          <Link
+            href="/"
+            style={{ fontSize: '0.82rem', color: '#64748B', textDecoration: 'none', fontWeight: 600 }}
+          >
             ← Back to main site
           </Link>
         </p>

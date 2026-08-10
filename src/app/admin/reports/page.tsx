@@ -1,170 +1,267 @@
 'use client';
 
-import React, { useState } from 'react';
-import { sampleBookings } from '@/lib/sample-data';
-import { Upload, FileText, Link as LinkIcon, Search, Check, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useAdmin } from '@/context/AdminContext';
+import { getReports, updateReportStatus, createReport, getBookings } from '@/lib/services/admin-db';
+import { generateId } from '@/lib/id-generator';
+import { logAudit } from '@/lib/services/audit-service';
+import { triggerEventNotification } from '@/lib/services/notification-service';
+import { Report, Booking, REPORT_STATUSES, ReportStatus } from '@/lib/types';
+import {
+  Search, X, FileText, Upload, Download, Eye, Check,
+  CheckCircle, Shield, Loader2, Plus, Filter
+} from 'lucide-react';
 
-interface ReportEntry {
-  id: string;
-  bookingId: string;
-  testName: string;
-  patientName: string;
-  pdfUrl: string;
-  uploadedAt: string;
-}
-
-export default function AdminReportsPage() {
-  const [reports, setReports] = useState<ReportEntry[]>([
-    {
-      id: 'R001',
-      bookingId: 'BK001',
-      testName: 'Fit India Full Body Checkup - Essential',
-      patientName: 'Rahul Sharma',
-      pdfUrl: 'report_BK001.pdf',
-      uploadedAt: '2026-04-06',
-    },
-  ]);
-
+export default function ReportsPage() {
+  const { tenantId, staffUser, can } = useAdmin();
+  const [reports, setReports] = useState<Report[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
   const [showUpload, setShowUpload] = useState(false);
-  const [selectedBookingId, setSelectedBookingId] = useState('');
-  const [searchBooking, setSearchBooking] = useState('');
+  const [uploadForm, setUploadForm] = useState({ bookingId: '', testName: '', patientId: '', patientName: '' });
+  const [saving, setSaving] = useState(false);
 
-  const bookingsWithoutReports = sampleBookings.filter(
-    b => b.status === 'completed' && !reports.find(r => r.bookingId === b.id)
-  );
+  useEffect(() => {
+    async function load() {
+      try {
+        const [r, b] = await Promise.all([getReports(tenantId), getBookings(tenantId)]);
+        setReports(r);
+        setBookings(b);
+      } catch (err) { console.error(err); }
+      finally { setLoading(false); }
+    }
+    load();
+  }, [tenantId]);
 
-  const filteredBookings = sampleBookings.filter(b =>
-    b.id.toLowerCase().includes(searchBooking.toLowerCase()) ||
-    b.patientName.toLowerCase().includes(searchBooking.toLowerCase())
-  );
+  const filtered = reports.filter(r => {
+    const term = search.toLowerCase();
+    const matchSearch = !search || r.patientName?.toLowerCase().includes(term) ||
+      r.reportId?.toLowerCase().includes(term) || r.testName?.toLowerCase().includes(term);
+    const matchStatus = !filterStatus || r.status === filterStatus;
+    return matchSearch && matchStatus;
+  });
 
-  const uploadReport = () => {
-    const booking = sampleBookings.find(b => b.id === selectedBookingId);
-    if (!booking) return;
+  const handleStatusChange = async (report: Report, newStatus: ReportStatus) => {
+    try {
+      const extraData: Partial<Report> = {};
+      if (newStatus === 'verified') {
+        extraData.verifiedBy = staffUser?.uid;
+        extraData.verifiedByName = staffUser?.name;
+      }
+      await updateReportStatus(report.id, newStatus, extraData);
+      setReports(cur => cur.map(r => r.id === report.id ? { ...r, status: newStatus, ...extraData } : r));
 
-    const newReport: ReportEntry = {
-      id: 'R' + Date.now().toString().slice(-4),
-      bookingId: booking.id,
-      testName: booking.items[0]?.testName || 'Test',
-      patientName: booking.patientName,
-      pdfUrl: `report_${booking.id}.pdf`,
-      uploadedAt: new Date().toISOString().split('T')[0],
-    };
+      await logAudit(tenantId, staffUser?.uid || '', staffUser?.name || '', staffUser?.role || 'super_admin',
+        `Updated report ${report.reportId} to ${newStatus}`, 'report', report.id);
 
-    setReports([newReport, ...reports]);
-    setShowUpload(false);
-    setSelectedBookingId('');
+      // Trigger notification when report is marked ready
+      if (newStatus === 'ready') {
+        await triggerEventNotification(tenantId, report.patientId, report.patientName, 'report_ready', {
+          testName: report.testName, reportLink: '#', labName: 'Lab',
+        });
+      }
+    } catch { alert('Failed to update status'); }
   };
 
+  const handleUpload = async () => {
+    if (!uploadForm.bookingId || !uploadForm.testName) return;
+    setSaving(true);
+    try {
+      const reportId = await generateId(tenantId, 'RPT');
+      const booking = bookings.find(b => b.id === uploadForm.bookingId);
+      const id = await createReport({
+        tenantId, reportId,
+        bookingId: uploadForm.bookingId,
+        bookingDisplayId: booking?.bookingId || '',
+        patientId: booking?.patientId || '',
+        patientName: booking?.patientName || '',
+        testName: uploadForm.testName,
+        pdfUrl: '#uploaded-pdf', // In production: upload to Firebase Storage
+        status: 'uploaded',
+        uploadedBy: staffUser?.uid,
+        uploadedByName: staffUser?.name,
+        uploadedAt: new Date(),
+        createdAt: new Date(), updatedAt: new Date(),
+      });
+      await logAudit(tenantId, staffUser?.uid || '', staffUser?.name || '', staffUser?.role || 'super_admin',
+        `Uploaded report ${reportId}`, 'report', id);
+      setReports([{
+        id, tenantId, reportId, bookingId: uploadForm.bookingId,
+        bookingDisplayId: booking?.bookingId || '', patientId: booking?.patientId || '',
+        patientName: booking?.patientName || '', testName: uploadForm.testName,
+        pdfUrl: '#', status: 'uploaded', uploadedBy: staffUser?.uid,
+        uploadedByName: staffUser?.name, createdAt: new Date(), updatedAt: new Date(),
+      } as Report, ...reports]);
+      setShowUpload(false);
+      setUploadForm({ bookingId: '', testName: '', patientId: '', patientName: '' });
+    } catch { alert('Failed to upload report'); }
+    finally { setSaving(false); }
+  };
+
+  if (loading) return <div className="admin-loading"><div className="admin-spinner" /><p className="admin-loading-text">Loading reports...</p></div>;
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <p className="text-gray-500 font-semibold text-sm bg-white px-4 py-2 border border-gray-200 rounded-xl shadow-sm">{reports.length} reports uploaded</p>
-        <button onClick={() => setShowUpload(!showUpload)} className="bg-[#0A2540] hover:bg-[#0e3460] text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors shadow-sm">
-          <Upload size={16} /> Upload Report
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>Reports</h1>
+          <p style={{ fontSize: '0.82rem', color: '#64748B', marginTop: 2 }}>Upload, verify, and manage patient reports</p>
+        </div>
+        <button onClick={() => setShowUpload(true)} className="admin-btn admin-btn-primary">
+          <Upload size={15} /> Upload Report
         </button>
       </div>
 
-      {/* Upload form */}
-      {showUpload && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 animate-fade-in-up">
-          <h3 className="text-[#0A2540] font-black mb-4">Upload Report PDF</h3>
-
-          {/* Search booking */}
-          <div className="mb-4">
-            <label className="block text-xs font-bold text-gray-500 mb-1.5">Link to Booking</label>
-            <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-4">
-              <Search size={14} className="text-gray-400" />
-              <input
-                type="text" value={searchBooking} onChange={e => setSearchBooking(e.target.value)}
-                placeholder="Search booking by ID or patient name..."
-                className="w-full px-3 py-2.5 bg-transparent outline-none text-sm text-[#0A2540] placeholder:text-gray-400 font-medium"
-              />
+      {/* Status Summary */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 10 }}>
+        {REPORT_STATUSES.map(s => (
+          <button key={s.key} onClick={() => setFilterStatus(filterStatus === s.key ? '' : s.key)}
+            className="admin-stat-card" style={{
+              cursor: 'pointer', padding: 12, textAlign: 'left',
+              border: filterStatus === s.key ? `2px solid ${s.color}` : undefined,
+            }}>
+            <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0F172A' }}>
+              {reports.filter(r => r.status === s.key).length}
             </div>
-          </div>
+            <div style={{ fontSize: '0.68rem', fontWeight: 700, color: s.color }}>{s.label}</div>
+          </button>
+        ))}
+      </div>
 
-          {searchBooking && (
-            <div className="space-y-1 mb-4 max-h-40 overflow-auto">
-              {filteredBookings.map(b => (
-                <button
-                  key={b.id}
-                  onClick={() => { setSelectedBookingId(b.id); setSearchBooking(''); }}
-                  className={`w-full text-left p-3 rounded-xl text-sm transition-colors border ${
-                    selectedBookingId === b.id ? 'bg-blue-50 border-blue-200 text-blue-700 font-bold' : 'bg-gray-50 border-transparent text-gray-600 hover:bg-gray-100 font-medium'
-                  }`}
-                >
-                  <span className="font-mono text-xs">{b.id}</span> — {b.patientName} — {b.items[0]?.testName}
-                </button>
-              ))}
-            </div>
-          )}
+      {/* Search */}
+      <div className="admin-header-search" style={{ maxWidth: 400 }}>
+        <Search size={16} style={{ color: '#94A3B8' }} />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search reports..." />
+      </div>
 
-          {selectedBookingId && (
-            <div className="flex items-center gap-2 mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
-              <Check size={14} className="text-emerald-600" />
-              <span className="text-sm text-emerald-700 font-bold">Selected: {selectedBookingId}</span>
-            </div>
-          )}
+      {/* Report Workflow Info */}
+      <div style={{
+        background: '#F0FDFA', border: '1px solid #CCFBF1', borderRadius: 12, padding: '12px 16px',
+        fontSize: '0.78rem', color: '#0D9488', display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <Shield size={16} />
+        <span><strong>Workflow:</strong> Upload → Verify → Mark Ready → Patient Notified. Reports are NOT sent until verified.</span>
+      </div>
 
-          {/* File upload */}
-          <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-8 text-center mb-4 hover:border-[#0A2540] transition-colors cursor-pointer">
-            <Upload size={32} className="mx-auto text-gray-400 mb-2" />
-            <p className="text-sm font-bold text-[#0A2540]">Drop PDF here or click to upload</p>
-            <p className="text-xs text-gray-400 font-medium mt-1">(Mock: file will be simulated)</p>
-          </div>
-
-          <div className="flex gap-3">
-            <button onClick={uploadReport} disabled={!selectedBookingId} className="bg-[#E53E3E] disabled:bg-gray-200 disabled:text-gray-400 hover:bg-red-700 text-white font-bold flex-1 justify-center py-3 rounded-xl transition-colors">
-              Upload & Link Report
-            </button>
-            <button onClick={() => setShowUpload(false)} className="px-6 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl text-sm hover:bg-gray-200 transition-colors">
-              Cancel
-            </button>
-          </div>
+      {/* Table */}
+      <div className="admin-card" style={{ overflow: 'hidden' }}>
+        <div className="admin-card-header">
+          <div className="admin-card-title">All Reports</div>
+          <span style={{ fontSize: '0.72rem', color: '#64748B', background: '#F1F5F9', padding: '4px 10px', borderRadius: 20, fontWeight: 600 }}>
+            {filtered.length} records
+          </span>
         </div>
-      )}
-
-      {/* Reports list */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+        <div style={{ overflowX: 'auto' }}>
+          <table className="admin-table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs uppercase font-bold">
-                <th className="text-left py-3 px-5">Report ID</th>
-                <th className="text-left py-3 px-5">Booking ID</th>
-                <th className="text-left py-3 px-5">Patient</th>
-                <th className="text-left py-3 px-5">Test</th>
-                <th className="text-left py-3 px-5">File</th>
-                <th className="text-left py-3 px-5">Uploaded</th>
-              </tr>
+              <tr><th>Report ID</th><th>Patient</th><th>Booking</th><th>Test</th><th>Status</th><th>Uploaded By</th><th>Date</th><th>Actions</th></tr>
             </thead>
             <tbody>
-              {reports.map((report) => (
-                <tr key={report.id} className="border-b border-gray-50 hover:bg-blue-50/50 transition-colors">
-                  <td className="py-4 px-5 font-mono text-xs font-bold text-gray-500">{report.id}</td>
-                  <td className="py-4 px-5 font-mono text-xs font-bold text-[#0A2540]">{report.bookingId}</td>
-                  <td className="py-4 px-5 text-[#0A2540] font-bold">{report.patientName}</td>
-                  <td className="py-4 px-5 text-gray-600 font-medium">{report.testName}</td>
-                  <td className="py-4 px-5">
-                    <span className="flex items-center gap-1.5 text-[#E53E3E] font-bold bg-red-50 px-3 py-1.5 rounded-lg w-fit">
-                      <FileText size={14} /> {report.pdfUrl}
-                    </span>
+              {filtered.map(r => (
+                <tr key={r.id}>
+                  <td style={{ fontFamily: 'monospace', color: '#0D9488', fontWeight: 600, fontSize: '0.78rem' }}>{r.reportId}</td>
+                  <td style={{ fontWeight: 600, color: '#0F172A' }}>{r.patientName}</td>
+                  <td style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#64748B' }}>{r.bookingDisplayId}</td>
+                  <td>{r.testName}</td>
+                  <td>
+                    <select value={r.status}
+                      onChange={e => handleStatusChange(r, e.target.value as ReportStatus)}
+                      className={`admin-badge admin-badge-${r.status}`}
+                      style={{ cursor: 'pointer', border: 'none', outline: 'none', padding: '4px 8px', fontSize: '0.72rem' }}>
+                      {REPORT_STATUSES.map(s => (
+                        <option key={s.key} value={s.key}>{s.label}</option>
+                      ))}
+                    </select>
                   </td>
-                  <td className="py-4 px-5 text-gray-500 text-xs font-medium">{report.uploadedAt}</td>
+                  <td style={{ fontSize: '0.78rem', color: '#64748B' }}>{r.uploadedByName || '—'}</td>
+                  <td style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+                    {r.createdAt instanceof Date ? r.createdAt.toLocaleDateString() : '—'}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      {r.status === 'uploaded' && can('reports.verify') && (
+                        <button onClick={() => handleStatusChange(r, 'verified')} className="admin-btn admin-btn-ghost" style={{ padding: 6, color: '#0D9488' }} title="Verify">
+                          <CheckCircle size={16} />
+                        </button>
+                      )}
+                      {r.status === 'verified' && can('reports.mark_ready') && (
+                        <button onClick={() => handleStatusChange(r, 'ready')} className="admin-btn admin-btn-ghost" style={{ padding: 6, color: '#059669' }} title="Mark Ready">
+                          <Check size={16} />
+                        </button>
+                      )}
+                      <button className="admin-btn admin-btn-ghost" style={{ padding: 6 }} title="Preview">
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
-              {reports.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="text-center py-12 text-gray-400">
-                    No reports uploaded yet.
-                  </td>
-                </tr>
-              )}
+              {filtered.length === 0 && <tr><td colSpan={8}>
+                <div className="admin-empty">
+                  <FileText size={36} style={{ color: '#CBD5E1', marginBottom: 8 }} />
+                  <div className="admin-empty-title">No reports found</div>
+                </div>
+              </td></tr>}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {showUpload && (
+        <div className="admin-modal-overlay" onClick={() => setShowUpload(false)}>
+          <div className="admin-modal" onClick={e => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <div style={{ fontWeight: 700, color: '#0F172A' }}>Upload Report</div>
+              <button onClick={() => setShowUpload(false)} className="admin-btn admin-btn-ghost" style={{ padding: 4 }}><X size={18} /></button>
+            </div>
+            <div className="admin-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label className="admin-label">Select Booking *</label>
+                <select className="admin-select" value={uploadForm.bookingId}
+                  onChange={e => {
+                    const b = bookings.find(bk => bk.id === e.target.value);
+                    setUploadForm({
+                      bookingId: e.target.value,
+                      testName: b?.items?.[0]?.testName || '',
+                      patientId: b?.patientId || '',
+                      patientName: b?.patientName || '',
+                    });
+                  }}>
+                  <option value="">Choose booking...</option>
+                  {bookings.filter(b => b.status !== 'cancelled').map(b => (
+                    <option key={b.id} value={b.id}>{b.bookingId} — {b.patientName}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="admin-label">Test Name *</label>
+                <input className="admin-input" value={uploadForm.testName}
+                  onChange={e => setUploadForm({...uploadForm, testName: e.target.value})} placeholder="Test name" />
+              </div>
+              <div>
+                <label className="admin-label">Report PDF</label>
+                <div style={{
+                  border: '2px dashed #E2E8F0', borderRadius: 12, padding: 32, textAlign: 'center',
+                  cursor: 'pointer', background: '#F8FAFC',
+                }}>
+                  <Upload size={24} style={{ color: '#94A3B8', marginBottom: 8 }} />
+                  <p style={{ fontSize: '0.82rem', color: '#64748B' }}>Click to upload or drag & drop</p>
+                  <p style={{ fontSize: '0.68rem', color: '#94A3B8' }}>PDF only, max 10MB</p>
+                </div>
+              </div>
+            </div>
+            <div className="admin-modal-footer">
+              <button onClick={() => setShowUpload(false)} className="admin-btn admin-btn-secondary">Cancel</button>
+              <button onClick={handleUpload} disabled={!uploadForm.bookingId || !uploadForm.testName || saving} className="admin-btn admin-btn-primary">
+                {saving ? <><Loader2 size={15} style={{ animation: 'admin-spin 0.7s linear infinite' }} /> Uploading...</> : <><Upload size={15} /> Upload</>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

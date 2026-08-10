@@ -14,8 +14,8 @@ interface TestCardProps {
 export default function TestCard({ test }: TestCardProps) {
   const { state, addToCart, removeFromCart } = useCart();
   const isInCart = state.items.some((item) => item.test.id === test.id);
-  const visibleParams = test.parameters.slice(0, 5);
-  const remainingParams = Math.max(test.parameters.length - visibleParams.length, 0);
+  const visibleParams = (test.parameters || []).slice(0, 5);
+  const remainingParams = Math.max((test.parameters || []).length - visibleParams.length, 0);
 
   return (
     <article className="test-card">
@@ -38,7 +38,7 @@ export default function TestCard({ test }: TestCardProps) {
 
       <div className="test-card__meta">
         <span className="test-card__meta-badge">Reports in {test.reportTime} hours</span>
-        <span>{test.testsCount || test.parameters.length} parameters</span>
+        <span>{test.testsCount || test.parameters?.length || 0} parameters</span>
         <span>Home sample collection available</span>
       </div>
 

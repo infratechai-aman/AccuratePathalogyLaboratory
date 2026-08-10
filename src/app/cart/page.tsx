@@ -41,7 +41,7 @@ function CartContent() {
                       <Link href={`/tests/${item.test.id}`} className="text-base font-bold text-brand-red hover:underline">
                         {item.test.name}
                       </Link>
-                      <p className="text-xs text-text-muted mt-0.5">{item.test.category} • {item.test.testsCount || item.test.parameters.length} parameters</p>
+                      <p className="text-xs text-text-muted mt-0.5">{item.test.category} • {item.test.testsCount || item.test.parameters?.length || 0} parameters</p>
 
                       <div className="flex items-center gap-2 mt-3">
                         <div className="flex items-center border border-border rounded-lg overflow-hidden">
@@ -70,7 +70,7 @@ function CartContent() {
 
                     <div className="text-right">
                       <p className="text-lg font-bold text-primary">₹{item.test.price * item.quantity}</p>
-                      <p className="text-sm text-text-muted line-through">₹{item.test.originalPrice * item.quantity}</p>
+                      <p className="text-sm text-text-muted line-through">₹{(item.test.originalPrice || item.test.price) * item.quantity}</p>
                       <span className="badge badge-success mt-1">{item.test.discount}% Off</span>
                     </div>
                   </div>

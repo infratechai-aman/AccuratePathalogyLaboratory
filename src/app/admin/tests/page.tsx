@@ -1,286 +1,325 @@
 'use client';
 
-import React, { useState } from 'react';
-import { sampleTests } from '@/lib/sample-data';
-import { TEST_CATEGORIES, CITIES, Test } from '@/lib/types';
-import { Plus, Edit3, Trash2, Search, X, Save, Eye, EyeOff } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useAdmin } from '@/context/AdminContext';
+import { getTests, createTest, updateTest, deleteTest, getPackages, createPackage, updatePackage, deletePackage } from '@/lib/services/admin-db';
+import { logAudit } from '@/lib/services/audit-service';
+import { Test, Package, TEST_CATEGORIES } from '@/lib/types';
+import {
+  Search, Plus, X, FlaskConical, Edit2, Trash2, Check,
+  Loader2, ToggleLeft, ToggleRight, Package as PackageIcon
+} from 'lucide-react';
 
-export default function AdminTestsPage() {
-  const [tests, setTests] = useState<Test[]>(sampleTests);
+export default function TestsPage() {
+  const { tenantId, staffUser } = useAdmin();
+  const [tests, setTests] = useState<Test[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'tests' | 'packages'>('tests');
   const [search, setSearch] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
+  const [showTestModal, setShowTestModal] = useState(false);
+  const [showPackageModal, setShowPackageModal] = useState(false);
   const [editingTest, setEditingTest] = useState<Test | null>(null);
-  const [showForm, setShowForm] = useState(false);
+  const [editingPackage, setEditingPackage] = useState<Package | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const [form, setForm] = useState<Partial<Test>>({
-    name: '', price: 0, originalPrice: 0, discount: 0,
-    category: 'Full Body', parameters: [], description: '',
-    reportTime: 14, isPackage: false, cities: [...CITIES],
-    active: true, testsCount: 0,
+  const [testForm, setTestForm] = useState({
+    name: '', testCode: '', category: 'Routine', price: '',
+    sampleType: 'Blood', preparations: '', turnaroundTime: '24 hours',
+    description: '', active: true,
   });
 
-  const [paramInput, setParamInput] = useState('');
-
-  const filteredTests = tests.filter(t => {
-    const matchSearch = !search || t.name.toLowerCase().includes(search.toLowerCase());
-    const matchCategory = !filterCategory || t.category === filterCategory;
-    return matchSearch && matchCategory;
+  const [pkgForm, setPkgForm] = useState({
+    name: '', description: '', price: '', testIds: [] as string[], active: true,
   });
 
-  const openAdd = () => {
+  useEffect(() => {
+    async function load() {
+      try {
+        const [t, p] = await Promise.all([getTests(tenantId), getPackages(tenantId)]);
+        setTests(t); setPackages(p);
+      } catch (err) { console.error(err); }
+      finally { setLoading(false); }
+    }
+    load();
+  }, [tenantId]);
+
+  const filteredTests = tests.filter(t =>
+    !search || t.name.toLowerCase().includes(search.toLowerCase()) ||
+    t.category?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredPackages = packages.filter(p =>
+    !search || p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSaveTest = async () => {
+    if (!testForm.name || !testForm.price) return;
+    setSaving(true);
+    try {
+      if (editingTest) {
+        await updateTest(editingTest.id, {
+          name: testForm.name, testCode: testForm.testCode, category: testForm.category,
+          price: parseFloat(testForm.price), sampleType: testForm.sampleType,
+          preparations: testForm.preparations.split(',').map(s => s.trim()).filter(Boolean),
+          turnaroundTime: testForm.turnaroundTime, description: testForm.description,
+          active: testForm.active,
+        });
+        setTests(cur => cur.map(t => t.id === editingTest.id ? { ...t, ...testForm, price: parseFloat(testForm.price), preparations: testForm.preparations.split(',').map(s => s.trim()) } : t));
+      } else {
+        const id = await createTest({
+          tenantId, name: testForm.name, testCode: testForm.testCode,
+          category: testForm.category, price: parseFloat(testForm.price),
+          sampleType: testForm.sampleType,
+          preparations: testForm.preparations.split(',').map(s => s.trim()).filter(Boolean),
+          turnaroundTime: testForm.turnaroundTime, description: testForm.description,
+          active: testForm.active, createdAt: new Date(),
+        });
+        setTests([{ id, tenantId, ...testForm, price: parseFloat(testForm.price), preparations: testForm.preparations.split(',').map(s => s.trim()), createdAt: new Date() } as any, ...tests]);
+        await logAudit(tenantId, staffUser?.uid || '', staffUser?.name || '', staffUser?.role || 'super_admin',
+          `Created test ${testForm.name}`, 'test', id);
+      }
+      setShowTestModal(false);
+      resetTestForm();
+    } catch { alert('Failed to save test'); }
+    finally { setSaving(false); }
+  };
+
+  const handleSavePackage = async () => {
+    if (!pkgForm.name || !pkgForm.price) return;
+    setSaving(true);
+    try {
+      const selectedTests = tests.filter(t => pkgForm.testIds.includes(t.id));
+      if (editingPackage) {
+        await updatePackage(editingPackage.id, {
+          name: pkgForm.name, description: pkgForm.description,
+          price: parseFloat(pkgForm.price), testIds: pkgForm.testIds,
+          testNames: selectedTests.map(t => t.name), active: pkgForm.active,
+        });
+        setPackages(cur => cur.map(p => p.id === editingPackage.id ? {
+          ...p, ...pkgForm, price: parseFloat(pkgForm.price), testNames: selectedTests.map(t => t.name),
+        } : p));
+      } else {
+        const id = await createPackage({
+          tenantId, name: pkgForm.name, description: pkgForm.description,
+          price: parseFloat(pkgForm.price), testIds: pkgForm.testIds,
+          testNames: selectedTests.map(t => t.name), active: pkgForm.active,
+          createdAt: new Date(),
+        });
+        setPackages([{ id, tenantId, ...pkgForm, price: parseFloat(pkgForm.price), testNames: selectedTests.map(t => t.name), createdAt: new Date() } as any, ...packages]);
+      }
+      setShowPackageModal(false);
+      setPkgForm({ name: '', description: '', price: '', testIds: [], active: true });
+    } catch { alert('Failed to save package'); }
+    finally { setSaving(false); }
+  };
+
+  const handleDeleteTest = async (test: Test) => {
+    if (!confirm(`Delete "${test.name}"? It will be deactivated.`)) return;
+    await deleteTest(test.id);
+    setTests(cur => cur.filter(t => t.id !== test.id));
+  };
+
+  const handleToggleTest = async (test: Test) => {
+    await updateTest(test.id, { active: !test.active });
+    setTests(cur => cur.map(t => t.id === test.id ? { ...t, active: !t.active } : t));
+  };
+
+  const resetTestForm = () => {
+    setTestForm({ name: '', testCode: '', category: 'Routine', price: '', sampleType: 'Blood', preparations: '', turnaroundTime: '24 hours', description: '', active: true });
     setEditingTest(null);
-    setForm({
-      name: '', price: 0, originalPrice: 0, discount: 0,
-      category: 'Full Body', parameters: [], description: '',
-      reportTime: 14, isPackage: false, cities: [...CITIES],
-      active: true, testsCount: 0,
+  };
+
+  const editTest = (test: Test) => {
+    setTestForm({
+      name: test.name, testCode: test.testCode || '', category: test.category || 'Routine',
+      price: test.price.toString(), sampleType: test.sampleType || 'Blood',
+      preparations: test.preparations?.join(', ') || '', turnaroundTime: test.turnaroundTime || '24 hours',
+      description: test.description || '', active: test.active,
     });
-    setShowForm(true);
-  };
-
-  const openEdit = (test: Test) => {
     setEditingTest(test);
-    setForm({ ...test });
-    setShowForm(true);
+    setShowTestModal(true);
   };
 
-  const handleSave = () => {
-    if (!form.name) return;
-    const discount = form.originalPrice ? Math.round(((form.originalPrice - (form.price || 0)) / form.originalPrice) * 100) : 0;
-
-    if (editingTest) {
-      setTests(tests.map(t => t.id === editingTest.id ? { ...t, ...form, discount, id: t.id } as Test : t));
-    } else {
-      const newTest: Test = {
-        ...form as Test,
-        id: 'test-' + Date.now(),
-        discount,
-        testsCount: form.parameters?.length || 0,
-      };
-      setTests([newTest, ...tests]);
-    }
-    setShowForm(false);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Delete this test?')) {
-      setTests(tests.filter(t => t.id !== id));
-    }
-  };
-
-  const toggleActive = (id: string) => {
-    setTests(tests.map(t => t.id === id ? { ...t, active: !t.active } : t));
-  };
-
-  const addParam = () => {
-    if (paramInput && form.parameters) {
-      setForm({ ...form, parameters: [...form.parameters, paramInput] });
-      setParamInput('');
-    }
-  };
-
-  const removeParam = (idx: number) => {
-    setForm({ ...form, parameters: form.parameters?.filter((_, i) => i !== idx) });
-  };
+  if (loading) return <div className="admin-loading"><div className="admin-spinner" /><p className="admin-loading-text">Loading...</p></div>;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <p className="text-gray-500 font-semibold text-sm bg-white px-4 py-2 border border-gray-200 rounded-xl shadow-sm">{filteredTests.length} tests</p>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>Tests & Packages</h1>
+          <p style={{ fontSize: '0.82rem', color: '#64748B', marginTop: 2 }}>Manage lab tests and health packages</p>
         </div>
-        <button onClick={openAdd} className="bg-[#0A2540] hover:bg-[#0e3460] text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors shadow-sm">
-          <Plus size={16} /> Add Test
+        <div style={{ display: 'flex', gap: 8 }}>
+          {activeTab === 'tests' ? (
+            <button onClick={() => { resetTestForm(); setShowTestModal(true); }} className="admin-btn admin-btn-primary">
+              <Plus size={15} /> Add Test
+            </button>
+          ) : (
+            <button onClick={() => { setPkgForm({ name: '', description: '', price: '', testIds: [], active: true }); setEditingPackage(null); setShowPackageModal(true); }} className="admin-btn admin-btn-primary">
+              <Plus size={15} /> Create Package
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="admin-tabs">
+        <button className={`admin-tab ${activeTab === 'tests' ? 'active' : ''}`} onClick={() => setActiveTab('tests')}>
+          Tests ({tests.length})
+        </button>
+        <button className={`admin-tab ${activeTab === 'packages' ? 'active' : ''}`} onClick={() => setActiveTab('packages')}>
+          Packages ({packages.length})
         </button>
       </div>
 
-      {/* Search & Filter */}
-      <div className="flex gap-3">
-        <div className="flex-1 flex items-center bg-white rounded-xl border border-gray-200 px-4 shadow-sm">
-          <Search size={16} className="text-gray-400" />
-          <input
-            type="text" value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search tests..." className="w-full px-3 py-3 bg-transparent outline-none text-sm text-[#0A2540] placeholder:text-gray-400 font-medium"
-          />
-        </div>
-        <select
-          value={filterCategory} onChange={e => setFilterCategory(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#0A2540] font-semibold outline-none shadow-sm focus:border-[#0A2540]"
-        >
-          <option value="">All Categories</option>
-          {TEST_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
+      <div className="admin-header-search" style={{ maxWidth: 400 }}>
+        <Search size={16} style={{ color: '#94A3B8' }} />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={`Search ${activeTab}...`} />
       </div>
 
-      {/* Tests table */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+      {activeTab === 'tests' && (
+        <div className="admin-card" style={{ overflow: 'hidden' }}>
+          <table className="admin-table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs uppercase font-bold">
-                <th className="text-left py-3 px-5">Test</th>
-                <th className="text-left py-3 px-5">Category</th>
-                <th className="text-left py-3 px-5">Price</th>
-                <th className="text-left py-3 px-5">Discount</th>
-                <th className="text-left py-3 px-5">Params</th>
-                <th className="text-left py-3 px-5">Status</th>
-                <th className="text-right py-3 px-5">Actions</th>
-              </tr>
+              <tr><th>Test Name</th><th>Code</th><th>Category</th><th>Price</th><th>Sample</th><th>TAT</th><th>Status</th><th>Actions</th></tr>
             </thead>
             <tbody>
-              {filteredTests.map((test) => (
-                <tr key={test.id} className="border-b border-gray-50 hover:bg-blue-50/50 transition-colors">
-                  <td className="py-4 px-5">
-                    <div>
-                      <p className="text-[#0A2540] font-bold">{test.name}</p>
-                      <p className="text-xs text-gray-400 font-medium">{test.isPackage ? 'Package' : 'Test'}</p>
-                    </div>
-                  </td>
-                  <td className="py-4 px-5">
-                    <span className="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 font-semibold text-xs">{test.category}</span>
-                  </td>
-                  <td className="py-4 px-5">
-                    <p className="text-[#0A2540] font-bold">₹{test.price}</p>
-                    <p className="text-xs text-gray-400 font-semibold line-through">₹{test.originalPrice}</p>
-                  </td>
-                  <td className="py-4 px-5">
-                    <span className="text-emerald-600 font-black">{test.discount}%</span>
-                  </td>
-                  <td className="py-4 px-5 text-gray-600 font-semibold">{test.testsCount || test.parameters.length}</td>
-                  <td className="py-4 px-5">
-                    <button onClick={() => toggleActive(test.id)}>
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                        test.active ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'
-                      }`}>
-                        {test.active ? <Eye size={12} /> : <EyeOff size={12} />}
-                        {test.active ? 'Active' : 'Hidden'}
-                      </span>
+              {filteredTests.map(t => (
+                <tr key={t.id}>
+                  <td style={{ fontWeight: 600, color: '#0F172A' }}>{t.name}</td>
+                  <td style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: '#64748B' }}>{t.testCode || '—'}</td>
+                  <td><span className="admin-badge admin-badge-system">{t.category}</span></td>
+                  <td style={{ fontWeight: 700, color: '#059669' }}>₹{t.price}</td>
+                  <td style={{ fontSize: '0.82rem' }}>{t.sampleType}</td>
+                  <td style={{ fontSize: '0.78rem', color: '#64748B' }}>{t.turnaroundTime}</td>
+                  <td>
+                    <button onClick={() => handleToggleTest(t)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                      {t.active ? <ToggleRight size={24} style={{ color: '#0D9488' }} /> : <ToggleLeft size={24} style={{ color: '#94A3B8' }} />}
                     </button>
                   </td>
-                  <td className="py-4 px-5 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => openEdit(test)} className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-[#0A2540] transition-colors border border-gray-100">
-                        <Edit3 size={14} />
-                      </button>
-                      <button onClick={() => handleDelete(test.id)} className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 transition-colors border border-red-50">
-                        <Trash2 size={14} />
-                      </button>
+                  <td>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => editTest(t)} className="admin-btn admin-btn-ghost" style={{ padding: 6 }}><Edit2 size={14} /></button>
+                      <button onClick={() => handleDeleteTest(t)} className="admin-btn admin-btn-ghost" style={{ padding: 6, color: '#DC2626' }}><Trash2 size={14} /></button>
                     </div>
                   </td>
                 </tr>
               ))}
-              {filteredTests.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center py-12 text-gray-400">
-                    No tests found.
-                  </td>
-                </tr>
-              )}
+              {filteredTests.length === 0 && <tr><td colSpan={8}>
+                <div className="admin-empty"><FlaskConical size={36} style={{ color: '#CBD5E1', marginBottom: 8 }} /><div className="admin-empty-title">No tests found</div></div>
+              </td></tr>}
             </tbody>
           </table>
         </div>
-      </div>
+      )}
 
-      {/* Add/Edit Modal */}
-      {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowForm(false)} />
-          <div className="relative bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-auto shadow-2xl">
-            <div className="sticky top-0 bg-white p-6 border-b border-gray-100 flex items-center justify-between z-10 shadow-sm">
-              <h2 className="text-lg font-black text-[#0A2540]">{editingTest ? 'Edit Test' : 'Add New Test'}</h2>
-              <button onClick={() => setShowForm(false)} className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-500 transition-colors">
-                <X size={18} />
+      {activeTab === 'packages' && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+          {filteredPackages.map(pkg => (
+            <div key={pkg.id} className="admin-card" style={{ padding: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '1rem' }}>{pkg.name}</div>
+                  {pkg.description && <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: 2 }}>{pkg.description}</div>}
+                </div>
+                <span style={{ fontWeight: 800, color: '#059669', fontSize: '1.1rem' }}>₹{pkg.price}</span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                {pkg.testNames?.map((name, i) => (
+                  <span key={i} className="admin-badge admin-badge-system">{name}</span>
+                ))}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className={`admin-badge ${pkg.active ? 'admin-badge-paid' : 'admin-badge-cancelled'}`}>
+                  {pkg.active ? 'Active' : 'Inactive'}
+                </span>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button className="admin-btn admin-btn-ghost" style={{ padding: 6 }}><Edit2 size={14} /></button>
+                  <button onClick={() => deletePackage(pkg.id).then(() => setPackages(cur => cur.filter(p => p.id !== pkg.id)))} className="admin-btn admin-btn-ghost" style={{ padding: 6, color: '#DC2626' }}><Trash2 size={14} /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {filteredPackages.length === 0 && (
+            <div className="admin-card" style={{ gridColumn: '1 / -1' }}>
+              <div className="admin-empty"><PackageIcon size={36} style={{ color: '#CBD5E1', marginBottom: 8 }} /><div className="admin-empty-title">No packages yet</div></div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Test Modal */}
+      {showTestModal && (
+        <div className="admin-modal-overlay" onClick={() => setShowTestModal(false)}>
+          <div className="admin-modal admin-modal-lg" onClick={e => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <div style={{ fontWeight: 700, color: '#0F172A' }}>{editingTest ? 'Edit Test' : 'Add New Test'}</div>
+              <button onClick={() => setShowTestModal(false)} className="admin-btn admin-btn-ghost" style={{ padding: 4 }}><X size={18} /></button>
+            </div>
+            <div className="admin-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div><label className="admin-label">Test Name *</label><input className="admin-input" value={testForm.name} onChange={e => setTestForm({...testForm, name: e.target.value})} /></div>
+                <div><label className="admin-label">Test Code</label><input className="admin-input" value={testForm.testCode} onChange={e => setTestForm({...testForm, testCode: e.target.value})} placeholder="e.g., CBC" /></div>
+                <div><label className="admin-label">Category</label>
+                  <select className="admin-select" value={testForm.category} onChange={e => setTestForm({...testForm, category: e.target.value})}>
+                    {TEST_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select></div>
+                <div><label className="admin-label">Price (₹) *</label><input className="admin-input" type="number" value={testForm.price} onChange={e => setTestForm({...testForm, price: e.target.value})} /></div>
+                <div><label className="admin-label">Sample Type</label>
+                  <select className="admin-select" value={testForm.sampleType} onChange={e => setTestForm({...testForm, sampleType: e.target.value})}>
+                    <option>Blood</option><option>Urine</option><option>Stool</option><option>Saliva</option><option>Swab</option><option>Other</option>
+                  </select></div>
+                <div><label className="admin-label">Turnaround Time</label><input className="admin-input" value={testForm.turnaroundTime} onChange={e => setTestForm({...testForm, turnaroundTime: e.target.value})} /></div>
+              </div>
+              <div><label className="admin-label">Preparations (comma separated)</label>
+                <input className="admin-input" value={testForm.preparations} onChange={e => setTestForm({...testForm, preparations: e.target.value})} placeholder="8-12 hours fasting, Morning sample recommended" /></div>
+              <div><label className="admin-label">Description</label>
+                <input className="admin-input" value={testForm.description} onChange={e => setTestForm({...testForm, description: e.target.value})} /></div>
+            </div>
+            <div className="admin-modal-footer">
+              <button onClick={() => setShowTestModal(false)} className="admin-btn admin-btn-secondary">Cancel</button>
+              <button onClick={handleSaveTest} disabled={!testForm.name || !testForm.price || saving} className="admin-btn admin-btn-primary">
+                {saving ? <Loader2 size={15} style={{ animation: 'admin-spin 0.7s linear infinite' }} /> : <Check size={15} />}
+                {editingTest ? ' Update' : ' Save'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
 
-            <div className="p-6 space-y-5">
+      {/* Package Modal */}
+      {showPackageModal && (
+        <div className="admin-modal-overlay" onClick={() => setShowPackageModal(false)}>
+          <div className="admin-modal admin-modal-lg" onClick={e => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <div style={{ fontWeight: 700, color: '#0F172A' }}>Create Package</div>
+              <button onClick={() => setShowPackageModal(false)} className="admin-btn admin-btn-ghost" style={{ padding: 4 }}><X size={18} /></button>
+            </div>
+            <div className="admin-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div><label className="admin-label">Package Name *</label><input className="admin-input" value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} placeholder="e.g., Full Body Checkup" /></div>
+                <div><label className="admin-label">Price (₹) *</label><input className="admin-input" type="number" value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} /></div>
+              </div>
+              <div><label className="admin-label">Description</label><input className="admin-input" value={pkgForm.description} onChange={e => setPkgForm({...pkgForm, description: e.target.value})} /></div>
               <div>
-                <label className="block text-xs font-bold text-gray-500 mb-1.5">Test Name</label>
-                <input value={form.name || ''} onChange={e => setForm({...form, name: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5">Price (₹)</label>
-                  <input type="number" value={form.price || ''} onChange={e => setForm({...form, price: Number(e.target.value)})}
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5">Original Price (₹)</label>
-                  <input type="number" value={form.originalPrice || ''} onChange={e => setForm({...form, originalPrice: Number(e.target.value)})}
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5">Category</label>
-                  <select value={form.category || ''} onChange={e => setForm({...form, category: e.target.value})}
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors">
-                    {TEST_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5">Report Time (hours)</label>
-                  <input type="number" value={form.reportTime || ''} onChange={e => setForm({...form, reportTime: Number(e.target.value)})}
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-500 mb-1.5">Description</label>
-                <textarea value={form.description || ''} onChange={e => setForm({...form, description: e.target.value})} rows={3}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors resize-none" />
-              </div>
-
-              {/* Parameters */}
-              <div>
-                <label className="block text-xs font-bold text-gray-500 mb-1.5">Parameters</label>
-                <div className="flex gap-2 mb-3">
-                  <input value={paramInput} onChange={e => setParamInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && addParam()}
-                    placeholder="Type parameter and press Enter..."
-                    className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[#0A2540] text-sm font-medium outline-none focus:border-[#0A2540] focus:bg-white transition-colors" />
-                  <button onClick={addParam} className="px-5 py-2.5 bg-[#0A2540] text-white rounded-xl text-sm font-bold hover:bg-[#0e3460] transition-colors shadow-sm">
-                    Add
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {form.parameters?.map((p, i) => (
-                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-lg text-xs font-semibold text-[#0A2540]">
-                      {p}
-                      <button onClick={() => removeParam(i)} className="text-gray-400 hover:text-red-500 transition-colors ml-1"><X size={12} /></button>
-                    </span>
+                <label className="admin-label">Select Tests to Include</label>
+                <div style={{ maxHeight: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {tests.filter(t => t.active).map(t => (
+                    <label key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', borderRadius: 8, cursor: 'pointer', background: pkgForm.testIds.includes(t.id) ? '#F0FDFA' : 'transparent' }}>
+                      <input type="checkbox" checked={pkgForm.testIds.includes(t.id)}
+                        onChange={() => setPkgForm({...pkgForm, testIds: pkgForm.testIds.includes(t.id) ? pkgForm.testIds.filter(id => id !== t.id) : [...pkgForm.testIds, t.id]})} />
+                      <span style={{ flex: 1, fontSize: '0.82rem' }}>{t.name}</span>
+                      <span style={{ fontSize: '0.78rem', color: '#059669' }}>₹{t.price}</span>
+                    </label>
                   ))}
-                  {form.parameters?.length === 0 && (
-                    <span className="text-xs text-gray-400 italic">No parameters added.</span>
-                  )}
                 </div>
               </div>
-
-              <div className="flex items-center gap-6 p-4 bg-gray-50 border border-gray-100 rounded-xl">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={form.isPackage || false} onChange={e => setForm({...form, isPackage: e.target.checked})}
-                    className="rounded text-[#0A2540] w-4 h-4 cursor-pointer" />
-                  <span className="text-sm font-bold text-[#0A2540]">Is Package</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={form.active !== false} onChange={e => setForm({...form, active: e.target.checked})}
-                    className="rounded text-[#0A2540] w-4 h-4 cursor-pointer" />
-                  <span className="text-sm font-bold text-[#0A2540]">Active (Visible)</span>
-                </label>
-              </div>
-
-              <div className="flex items-center gap-3 pt-6 border-t border-gray-100">
-                <button onClick={handleSave} className="bg-[#E53E3E] text-white flex-1 justify-center py-3.5 rounded-xl text-sm font-black hover:bg-red-700 transition-colors shadow-sm flex items-center gap-2">
-                  <Save size={16} /> {editingTest ? 'Update Test' : 'Create Test'}
-                </button>
-                <button onClick={() => setShowForm(false)} className="px-8 py-3.5 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
-                  Cancel
-                </button>
-              </div>
+            </div>
+            <div className="admin-modal-footer">
+              <button onClick={() => setShowPackageModal(false)} className="admin-btn admin-btn-secondary">Cancel</button>
+              <button onClick={handleSavePackage} disabled={!pkgForm.name || !pkgForm.price || saving} className="admin-btn admin-btn-primary">
+                {saving ? <Loader2 size={15} style={{ animation: 'admin-spin 0.7s linear infinite' }} /> : <Check size={15} />} Create Package
+              </button>
             </div>
           </div>
         </div>

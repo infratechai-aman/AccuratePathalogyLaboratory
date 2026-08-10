@@ -69,7 +69,7 @@ export default function MyReportsPage() {
                   <div>
                     <h3 className="text-base font-bold text-gray-900 mb-0.5">{report.testName}</h3>
                     <p className="text-xs font-mono text-gray-500">Booking ID: {report.bookingId}</p>
-                    <p className="text-xs text-gray-500 mt-1">Generated: {new Date(report.uploadedAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-gray-500 mt-1">Generated: {report.uploadedAt ? new Date(report.uploadedAt).toLocaleDateString() : '—'}</p>
                     <div className="flex items-center gap-1 mt-2">
                        <span className="bg-green-100 text-green-700 font-bold px-2 py-1 rounded text-[10px] flex items-center gap-1 w-max">
                           <Eye size={10} /> Doctor Verified
