@@ -323,12 +323,18 @@
 /* ---- Main Content ---- */
 .admin-main {
   margin-left: var(--admin-sidebar-width);
+  width: calc(100% - var(--admin-sidebar-width));
   min-height: 100vh;
   background: var(--admin-bg);
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-content {
+  flex: 1;
   padding: 24px;
+  width: 100%;
+  min-width: 0;
 }
 
 /* ---- Cards ---- */
@@ -337,6 +343,13 @@
   border: 1px solid var(--admin-border);
   border-radius: var(--admin-radius-lg);
   box-shadow: var(--admin-shadow);
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .admin-card-header {
